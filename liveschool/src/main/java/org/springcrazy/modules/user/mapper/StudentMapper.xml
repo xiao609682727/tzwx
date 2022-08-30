@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.springcrazy.modules.user.mapper.StudentMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="studentResultMap" type="org.springcrazy.modules.user.entity.Student">
+        <id column="id" property="id"/>
+        <result column="mobile" property="mobile"/>
+        <result column="email" property="email"/>
+        <result column="password" property="password"/>
+        <result column="user_name" property="userName"/>
+        <result column="show_name" property="showName"/>
+        <result column="sex" property="sex"/>
+        <result column="age" property="age"/>
+        <result column="create_time" property="createTime"/>
+        <result column="is_avalible" property="isAvalible"/>
+        <result column="head_img" property="headImg"/>
+        <result column="banner_url" property="bannerUrl"/>
+        <result column="msg_num" property="msgNum"/>
+        <result column="sys_msg_num" property="sysMsgNum"/>
+        <result column="last_system_time" property="lastSystemTime"/>
+        <result column="login_account" property="loginAccount"/>
+        <result column="register_from" property="registerFrom"/>
+        <result column="invitationCode" property="invitationCode"/>
+        <result column="realName" property="realName"/>
+        <result column="idCardNo" property="idCardNo"/>
+        <result column="province" property="province"/>
+        <result column="city" property="city"/>
+        <result column="area" property="area"/>
+        <result column="school" property="school"/>
+        <result column="subject" property="subject"/>
+        <result column="userInfo" property="userInfo"/>
+        <result column="weibo" property="weibo"/>
+        <result column="wechat" property="wechat"/>
+        <result column="qq" property="qq"/>
+        <result column="weiboname" property="weiboname"/>
+        <result column="wechatname" property="wechatname"/>
+        <result column="qqname" property="qqname"/>
+        <result column="is_deleted" property="isDeleted"/>
+    </resultMap>
+
+
+    <select id="selectStudentPage" resultMap="studentResultMap">
+        select * from edu_student where is_deleted = 0
+    </select>
+    <select id="selectStudentLogin" resultMap="studentResultMap">
+        select * from edu_student where is_deleted=0
+        <if test="loginAccount !=null and loginAccount !='' ">
+            and (login_account = #{loginAccount} or
+            mobile = #{loginAccount} or
+            email = #{loginAccount} or
+            user_name = #{loginAccount} )
+        </if>
+        <if test="password !=null and password !='' ">
+            and password = #{password}
+        </if>
+        limit 1
+    </select>
+
+    <select id="checkStudent" resultMap="studentResultMap">
+        select * from edu_student where 1=1 and is_deleted=0
+        and (
+        <if test="mobile !=null and mobile !='' ">
+           mobile = #{mobile}
+        </if>
+        <if test="email !=null and email !='' ">
+            or email = #{email}
+        </if>
+        <if test="userName !=null and userName !='' ">
+            or user_name = #{userName}
+        </if>
+        )
+        limit 1
+    </select>
+
+    <select id="userInfos" resultMap="studentResultMap" parameterType="int">
+        select * from edu_student where id = #{email}
+        limit 1
+    </select>
+
+    <select id="getStudent" resultMap="studentResultMap" parameterType="int">
+        select * from edu_student where id = #{value}
+    </select>
+    <select id="checkStudentEmail" resultMap="studentResultMap">
+        select * from edu_student where email = #{email} and is_deleted = 0
+        limit 1
+    </select>
+    <select id="checkStudentMobile" resultMap="studentResultMap">
+        select * from edu_student where mobile = #{mobile} and is_deleted = 0
+        limit 1
+    </select>
+    <select id="checkStudentUserName" resultMap="studentResultMap">
+        select * from edu_student where user_name = #{userName} and is_deleted = 0
+        limit 1
+    </select>
+
+    <select id="checkStudentNew" resultMap="studentResultMap">
+        select * from edu_student
+        <where>
+            <if test="mobile !=null and mobile !='' ">
+                or mobile = #{mobile}
+            </if>
+            <if test="email !=null and email !='' ">
+                or email = #{email}
+            </if>
+            <if test="userName !=null and userName !='' ">
+                or user_name = #{userName}
+            </if>
+            <if test="id !=null and id !='' ">
+                or id = #{id}
+            </if>
+            and is_deleted=0
+        </where>
+        limit 1
+    </select>
+
+    <select id="exportUser" resultType="org.springcrazy.modules.system.excel.ExportStudentExcel">
+        SELECT * FROM edu_student ${ew.customSqlSegment} and is_deleted=0
+    </select>
+
+    <update id="updateAvalible" >
+        update edu_student set is_avalible = 1
+        where
+            <if test="key !=null and key !='' ">
+                ( mobile = #{key} or
+                email = #{key} or
+                user_name = #{key} )
+            </if>
+            and is_deleted = 0
+    </update>
+</mapper>

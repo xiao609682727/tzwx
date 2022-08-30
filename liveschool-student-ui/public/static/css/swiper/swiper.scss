@@ -1,0 +1,11 @@
+@charset "utf-8";
+@import "../base-scss";
+.swiper-pagination-bullet{margin-left: 5px!important;}
+.i-slide .swiper-pagination {position: absolute;left: 0;text-align: center;bottom: 10px;width: 100%;z-index: 9;}
+.i-slide{position: relative;}
+.swiper-container {width: 100%;}
+.swiper-slide img {display: block;margin: 0 auto;width: 100%;height: auto;}
+.swiper-button-prev,.swiper-button-next,.swiper-pagination-bullet-active{color:$type-primary}
+.swiper-pagination{
+  --swiper-pagination-color: #eaeaea;
+}

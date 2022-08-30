@@ -1,0 +1,115 @@
+import request from '@/router/axios';
+
+export const getList = (current, size, params) => {
+  return request({
+    url: '/api/crazy-user/list',
+    method: 'get',
+    params: {
+      ...params,
+      current,
+      size,
+    }
+  })
+}
+export const remove = (ids) => {
+  return request({
+    url: '/api/crazy-user/remove',
+    method: 'post',
+    params: {
+      ids,
+    }
+  })
+}
+
+export const add = (row) => {
+  return request({
+    url: '/api/crazy-user/submit',
+    method: 'post',
+    data: row
+  })
+}
+
+export const update = (row) => {
+  return request({
+    url: '/api/crazy-user/update',
+    method: 'post',
+    data: row
+  })
+}
+
+export const grant = (userIds, roleIds) => {
+  return request({
+    url: '/api/crazy-user/grant',
+    method: 'post',
+    params: {
+      userIds,
+      roleIds,
+    }
+  })
+}
+
+export const getUser = (id) => {
+  return request({
+    url: '/api/crazy-user/detail',
+    method: 'get',
+    params: {
+      id,
+    }
+  })
+}
+
+export const getUserInfo = () => {
+  return request({
+    url: '/api/crazy-user/info',
+    method: 'get',
+  })
+}
+
+export const resetPassword = (userIds) => {
+  return request({
+    url: '/api/crazy-user/reset-password',
+    method: 'post',
+    params: {
+      userIds,
+    }
+  })
+}
+
+export const updatePassword = (oldPassword, newPassword, newPassword1) => {
+  return request({
+    url: '/api/crazy-user/update-password',
+    method: 'post',
+    params: {
+      oldPassword,
+      newPassword,
+      newPassword1,
+    }
+  })
+}
+
+
+export const updatePasswordNew = (userId,newPassword, newPassword1) => {
+  return request({
+    url: '/api/crazy-user/updateAndUserpassword',
+    method: 'post',
+    params: {
+      userId,
+      newPassword,
+      newPassword1,
+    }
+  })
+}
+
+
+export const updatePasswordUserName = (userName,newPassword, newPassword1) => {
+  return request({
+    url: '/api/crazy-user/updateAndUserNamepassword',
+    method: 'post',
+    params: {
+      userName,
+      newPassword,
+      newPassword1,
+    }
+  })
+}
+

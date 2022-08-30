@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.springcrazy.modules.user.mapper.UserAccountMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="userAccountResultMap" type="org.springcrazy.modules.user.vo.UserAccountVO">
+        <id column="id" property="id"/>
+        <result column="user_id" property="userId"/>
+        <result column="balance" property="balance"/>
+        <result column="forzen_amount" property="forzenAmount"/>
+        <result column="cash_amount" property="cashAmount"/>
+        <result column="vm_amount" property="vmAmount"/>
+        <result column="back_amount" property="backAmount"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_time" property="updateTime"/>
+
+        <result column="mobile" property="mobile"/>
+        <result column="email" property="email"/>
+        <result column="user_name" property="userName"/>
+        <result column="login_account" property="loginAccount"/>
+    </resultMap>
+
+
+    <select id="selectUserAccountPage" resultMap="userAccountResultMap">
+        select * from edu_user_account
+        left join edu_student  on edu_user_account.user_id = edu_student.id
+        where edu_student.is_deleted = 0
+        <if test="userAccount.userName !=null and userAccount.userName !='' ">
+            and edu_student.user_name like concat('%',#{userAccount.userName},'%')
+        </if>
+        <if test="userAccount.mobile !=null and userAccount.mobile !='' ">
+            and edu_student.mobile like concat('%',#{userAccount.mobile},'%')
+        </if>
+        <if test="userAccount.email !=null and userAccount.email !='' ">
+            and edu_student.email like concat('%',#{userAccount.email},'%')
+        </if>
+        <if test="userAccount.userId !=null and userAccount.userId !='' ">
+            and edu_user_account.user_id = #{userAccount.userId}
+        </if>
+        order by edu_user_account.id desc
+    </select>
+
+</mapper>

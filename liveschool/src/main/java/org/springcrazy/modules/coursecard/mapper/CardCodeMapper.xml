@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.springcrazy.modules.coursecard.mapper.CardCodeMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="cardCodeResultMap" type="org.springcrazy.modules.coursecard.entity.CardCode">
+        <id column="id" property="id"/>
+        <result column="card_id" property="cardId"/>
+        <result column="card_code" property="cardCode"/>
+        <result column="card_code_password" property="cardCodePassword"/>
+        <result column="status" property="status"/>
+        <result column="user_email" property="userEmail"/>
+        <result column="user_id" property="userId"/>
+        <result column="trxorder_id" property="trxorderId"/>
+        <result column="request_id" property="requestId"/>
+        <result column="create_time" property="createTime"/>
+        <result column="use_time" property="useTime"/>
+    </resultMap>
+    <resultMap id="CardCodeVOResultMap" type="org.springcrazy.modules.coursecard.vo.CardCodeVO" extends="cardCodeResultMap">
+    </resultMap>
+    <resultMap id="ExportCardCodeExcelResultMap" type="org.springcrazy.modules.system.excel.ExportCardCodeExcel" >
+        <result column="card_code" property="cardCode"/>
+        <result column="card_code_password" property="cardCodePassword"/>
+        <result column="status" property="status"/>
+        <result column="user_id" property="userId"/>
+        <result column="trxorder_id" property="trxorderId"/>
+        <result column="request_id" property="requestId"/>
+        <result column="create_time" property="createTime"/>
+        <result column="use_time" property="useTime"/>
+
+    </resultMap>
+
+    <select id="selectCardCodePage" resultMap="CardCodeVOResultMap">
+        select
+        edu_card_code.*,
+        edu_student.mobile mobile,
+        edu_student.user_name userName,
+        edu_student.show_name showName,
+        edu_student.realName
+        from edu_card_code
+         left join edu_student on edu_card_code.user_id = edu_student.id
+        <where>
+            <if test="cardCodeVO.cardId !=null and cardCodeVO.cardId !=0 ">
+                and edu_card_code.card_id = #{cardCodeVO.cardId}
+            </if>
+            <if test="cardCodeVO.cardCode !=null and cardCodeVO.cardCode !='' ">
+                and edu_card_code.card_code = #{cardCodeVO.cardCode}
+            </if>
+
+            <if test="cardCodeVO.status !=null and cardCodeVO.status !='' ">
+                and edu_card_code.status = #{cardCodeVO.status}
+            </if>
+             <if test="cardCodeVO.requestId !=null and cardCodeVO.requestId !='' ">
+                and edu_card_code.request_id = #{cardCodeVO.requestId}
+            </if>
+            <if test="cardCodeVO.displayName !=null and cardCodeVO.displayName !='' ">
+                and (login_account = #{cardCodeVO.displayName} or
+                mobile = #{cardCodeVO.displayName} or
+                email = #{cardCodeVO.displayName} or
+                realName = #{cardCodeVO.displayName} or
+                user_name = #{cardCodeVO.displayName} )
+            </if>
+            order by edu_card_code.id desc
+        </where>
+    </select>
+
+    <select id="exportCardCodeVO" resultMap="ExportCardCodeExcelResultMap">
+        select
+        edu_card_code.*,
+        edu_student.mobile mobile,
+        edu_student.user_name userName,
+        edu_student.show_name showName,
+        edu_student.realName
+        from edu_card_code
+        left join edu_student on edu_card_code.user_id = edu_student.id
+        <where>
+            <if test="cardCodeVO.cardId !=null and cardCodeVO.cardId !=0 ">
+                and edu_card_code.card_id = #{cardCodeVO.cardId}
+            </if>
+            <if test="cardCodeVO.cardCode !=null and cardCodeVO.cardCode !='' ">
+                and edu_card_code.card_code = #{cardCodeVO.cardCode}
+            </if>
+
+            <if test="cardCodeVO.status !=null and cardCodeVO.status !='' ">
+                and edu_card_code.status = #{cardCodeVO.status}
+            </if>
+            <if test="cardCodeVO.requestId !=null and cardCodeVO.requestId !='' ">
+                and edu_card_code.request_id = #{cardCodeVO.requestId}
+            </if>
+            <if test="cardCodeVO.displayName !=null and cardCodeVO.displayName !='' ">
+                and (login_account = #{cardCodeVO.displayName} or
+                mobile = #{cardCodeVO.displayName} or
+                email = #{cardCodeVO.displayName} or
+                realName = #{cardCodeVO.displayName} or
+                user_name = #{cardCodeVO.displayName} )
+            </if>
+            order by edu_card_code.id desc
+        </where>
+    </select>
+
+</mapper>

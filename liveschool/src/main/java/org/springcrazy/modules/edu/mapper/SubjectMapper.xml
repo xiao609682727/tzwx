@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.springcrazy.modules.edu.mapper.SubjectMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="subjectResultMap" type="org.springcrazy.modules.edu.entity.Subject">
+        <id column="subject_id" property="subjectId"/>
+        <result column="subject_name" property="subjectName"/>
+        <result column="status" property="status"/>
+        <result column="create_time" property="createTime"/>
+        <result column="parent_id" property="parentId"/>
+        <result column="sort" property="sort"/>
+        <result column="type" property="type"/>
+    </resultMap>
+
+    <resultMap id="treeNodeResultMap" type="org.springcrazy.core.tool.node.TreeNode">
+        <id column="id" property="id"/>
+        <result column="parent_id" property="parentId"/>
+        <result column="title" property="title"/>
+        <result column="value" property="value"/>
+        <result column="key" property="key"/>
+    </resultMap>
+    <select id="selectSubjectPage" resultMap="subjectResultMap">
+        select * from edu_subject where is_deleted = 0
+    </select>
+
+
+    <select id="getSubjectByName" resultMap="subjectResultMap" parameterType="java.lang.String" >
+        select * from edu_subject where subject_name = #{subjectName} and type='exam' and status = 0
+    </select>
+
+    <select id="getSubjectBysubjectId" resultMap="subjectResultMap" parameterType="java.lang.Integer" >
+        select * from edu_subject where id = #{subjectId}  and status = 0
+    </select>
+
+    <select id="getSubjectByNameList" resultMap="subjectResultMap" parameterType="java.lang.String" >
+        select * from edu_subject where subject_name = #{subjectName} and type='exam' and status = 0
+    </select>
+
+    <select id="tree" resultMap="treeNodeResultMap">
+        select id, parent_id, subject_name as title, id as 'value', id as 'key' from edu_subject where status = 0 and type='course'order by sort desc
+    </select>
+
+
+    <select id="lineClasstree" resultMap="treeNodeResultMap">
+        select id, parent_id, subject_name as title, id as 'value', id as 'key' from edu_subject where status = 0 and type='lineclass'order by sort desc
+    </select>
+
+    <select id="examTree" resultMap="treeNodeResultMap">
+        select id, parent_id, subject_name as title, id as 'value', id as 'key' from edu_subject where status = 0 and type='exam'order by sort desc
+    </select>
+
+    <select id="addressTree" resultMap="treeNodeResultMap">
+        select id, parent_id, subject_name as title, id as 'value', id as 'key' from edu_subject where status = 0 and type='lineclass'order by sort desc
+    </select>
+</mapper>

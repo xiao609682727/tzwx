@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.springcrazy.modules.agent.mapper.AgentUserAccountHistoryMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="agentUserAccountHistoryResultMap" type="org.springcrazy.modules.agent.entity.AgentUserAccountHistory">
+        <id column="id" property="id"/>
+        <result column="agent_user_id" property="agentUserId"/>
+        <result column="order_id" property="orderId"/>
+        <result column="order_no" property="orderNo"/>
+        <result column="other_id" property="otherId"/>
+        <result column="balance" property="balance"/>
+        <result column="cash_amount" property="cashAmount"/>
+        <result column="vm_amount" property="vmAmount"/>
+        <result column="trx_amount" property="trxAmount"/>
+        <result column="description" property="description"/>
+        <result column="act_history_type" property="actHistoryType"/>
+        <result column="biz_type" property="bizType"/>
+        <result column="create_user" property="createUser"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_time" property="updateTime"/>
+        <result column="status" property="status"/>
+        <result column="is_deleted" property="isDeleted"/>
+    </resultMap>
+
+    <resultMap id="agentUserAccountHistoryVOResultMap" extends="agentUserAccountHistoryResultMap" type="org.springcrazy.modules.agent.vo.AgentUserAccountHistoryVO">
+
+    </resultMap>
+    <select id="selectAgentUserAccountHistoryPage" resultMap="agentUserAccountHistoryVOResultMap">
+        select
+        edu_agent_user_account_history.*,
+        crazy_user.account account,
+        crazy_user.name name,
+        crazy_user.real_name realName,
+        crazy_user.phone phone
+        from edu_agent_user_account_history
+        left join crazy_user on edu_agent_user_account_history.agent_user_id = crazy_user.id
+        where 1=1
+        <if test="agentUserAccountHistory.account !=null and agentUserAccountHistory.account !='' ">
+            and crazy_user.account like concat('%',#{agentUserAccountHistory.account},'%')
+        </if>
+        <if test="agentUserAccountHistory.name !=null and agentUserAccountHistory.name !='' ">
+            and crazy_user.name like concat('%',#{agentUserAccountHistory.name},'%')
+        </if>
+        <if test="agentUserAccountHistory.realName !=null and agentUserAccountHistory.realName !='' ">
+            and crazy_user.real_name like concat('%',#{agentUserAccountHistory.realName},'%')
+        </if>
+        <if test="agentUserAccountHistory.phone !=null and agentUserAccountHistory.phone !='' ">
+            and crazy_user.phone like concat('%',#{agentUserAccountHistory.phone},'%')
+        </if>
+        <if test="agentUserAccountHistory.actHistoryType !=null and agentUserAccountHistory.actHistoryType !='' ">
+            and edu_agent_user_account_history.act_history_type = #{agentUserAccountHistory.actHistoryType}
+        </if>
+        <if test="agentUserAccountHistory.bizType !=null and agentUserAccountHistory.bizType !='' ">
+            and edu_agent_user_account_history.biz_type = #{agentUserAccountHistory.bizType}
+        </if>
+
+        <if test="agentUserAccountHistory.agentUserId !=null and agentUserAccountHistory.agentUserId !='' ">
+            and edu_agent_user_account_history.agent_user_id = #{agentUserAccountHistory.agentUserId}
+        </if>
+        order by edu_agent_user_account_history.id desc
+    </select>
+
+    <select id="exportAgentUserAccountHistory" resultType="org.springcrazy.modules.system.excel.AgentUserAccountHistoryExcel">
+        select
+        edu_agent_user_account_history.*,
+        crazy_user.account account,
+        crazy_user.name name,
+        crazy_user.real_name realName,
+        crazy_user.phone phone
+        from edu_agent_user_account_history
+        left join crazy_user on edu_agent_user_account_history.agent_user_id = crazy_user.id
+        where crazy_user.is_deleted=0
+        <if test="agentUserAccountHistory.account !=null and agentUserAccountHistory.account !='' ">
+            and crazy_user.account like concat('%',#{agentUserAccountHistory.account},'%')
+        </if>
+        <if test="agentUserAccountHistory.name !=null and agentUserAccountHistory.name !='' ">
+            and crazy_user.name like concat('%',#{agentUserAccountHistory.name},'%')
+        </if>
+        <if test="agentUserAccountHistory.realName !=null and agentUserAccountHistory.realName !='' ">
+            and crazy_user.real_name like concat('%',#{agentUserAccountHistory.realName},'%')
+        </if>
+        <if test="agentUserAccountHistory.phone !=null and agentUserAccountHistory.phone !='' ">
+            and crazy_user.phone like concat('%',#{agentUserAccountHistory.phone},'%')
+        </if>
+        <if test="agentUserAccountHistory.actHistoryType !=null and agentUserAccountHistory.actHistoryType !='' ">
+            and edu_agent_user_account_history.act_history_type = #{agentUserAccountHistory.actHistoryType}
+        </if>
+        <if test="agentUserAccountHistory.bizType !=null and agentUserAccountHistory.bizType !='' ">
+            and edu_agent_user_account_history.biz_type = #{agentUserAccountHistory.bizType}
+        </if>
+        <if test="agentUserAccountHistory.agentUserId !=null and agentUserAccountHistory.agentUserId !='' ">
+            and edu_agent_user_account_history.agent_user_id = #{agentUserAccountHistory.agentUserId}
+        </if>
+        order by edu_agent_user_account_history.id desc
+    </select>
+</mapper>

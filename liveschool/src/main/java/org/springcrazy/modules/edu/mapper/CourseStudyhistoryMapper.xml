@@ -1,0 +1,846 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.springcrazy.modules.edu.mapper.CourseStudyhistoryMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="courseStudyhistoryResultMap" type="org.springcrazy.modules.edu.entity.CourseStudyhistory">
+        <id column="id" property="id"/>
+        <result column="user_id" property="userId"/>
+        <result column="course_id" property="courseId"/>
+        <result column="kpoint_id" property="kpointId"/>
+        <result column="playercount" property="playercount"/>
+        <result column="course_name" property="courseName"/>
+        <result column="kpoint_name" property="kpointName"/>
+        <result column="databack" property="databack"/>
+        <result column="update_time" property="updateTime"/>
+        <result column="complete" property="complete"/>
+        <result column="watch_time" property="watchTime"/>
+        <result column="study_learning" property="studyLearning"/>
+        <result column="mobile" property="mobile"/>
+        <result column="user_name" property="userName"/>
+        <result column="show_name" property="showName"/>
+        <result column="realName" property="realName"/>
+        <result column="videoTime" property="videoTime"/>
+        <result column="kpoint_course_id" property="kpointCouserId" />
+    </resultMap>
+
+    <resultMap id="courseStudyKpointMap" type="org.springcrazy.modules.edu.entity.CourseStudyhistory">
+        <result column="id" property="id"/>
+        <result column="course_id" property="courseId"/>
+        <result column="name" property="kpointName"/>
+        <result column="course_name" property="courseName"/>
+        <result column="videoTime" property="videoTime"/>
+        <result column="parent_id" property="parentId"/>
+        <result column="sell_type" property="popeType"/>
+        <result column="user_id" property="userId"/>
+    </resultMap>
+
+    <sql id="eduCourseStudyhistory">
+    edu_course_studyhistory.id,
+    edu_course_studyhistory.user_id,
+    edu_course_studyhistory.course_id,
+    edu_course_studyhistory.kpoint_id,
+    edu_course_studyhistory.playercount,
+    edu_course_studyhistory.course_name,
+    edu_course_studyhistory.kpoint_name,
+    edu_course_studyhistory.databack,
+    edu_course_studyhistory.update_time,
+    edu_course_studyhistory.complete,
+    edu_course_studyhistory.watch_time,
+    edu_course_studyhistory.study_learning
+    </sql>
+
+    <select id="selectCourseStudyhistoryPage" resultMap="courseStudyhistoryResultMap">
+        select * from edu_course_studyhistory where is_deleted = 0
+    </select>
+
+    <select id="selectCourseTrxorder" resultMap="courseStudyhistoryResultMap">
+         SELECT
+         course_id,
+        edu_course.sell_type sellType,
+         MAX(auth_time) as authTime,
+         pay_time as payTime,
+         edu_course.course_name,
+         edu_trxorder_detail.user_id
+         FROM edu_trxorder_detail
+	      LEFT JOIN edu_course ON edu_course.id=edu_trxorder_detail.course_id
+            <where>
+                edu_trxorder_detail.user_id=#{e.userId}
+                AND edu_trxorder_detail.auth_status=2
+                <if test="e.courseName!=null and e.courseName!=''">
+                    AND edu_trxorder_detail.course_name like  concat('%',#{e.courseName},'%')
+                </if>
+                <if test="e.sellType!=null and e.sellType!=0">
+                    AND edu_course.sell_type =  #{e.sellType}
+                </if>
+            </where>
+           GROUP BY course_id
+           ORDER BY edu_trxorder_detail.id DESC
+    </select>
+
+    <select id="getStudyTime" resultType="CourseStudyhistory">
+       SELECT SUM(watch_time) as watchTime
+       ,MAX(update_time) as updateTime
+       FROM edu_course_studyhistory
+       WHERE edu_course_studyhistory.course_id=#{courseId}
+       and edu_course_studyhistory.user_id=#{userId}
+    </select>
+
+    <select id="getPackageStudyTime" resultType="CourseStudyhistory">
+       SELECT SUM(watch_time) as watchTime
+       ,MAX(update_time) as updateTime
+       FROM edu_course_studyhistory
+        <where>
+            <if test="coursePackageId!=null and coursePackageId!=0">
+                and edu_course_studyhistory.kpoint_course_id=#{coursePackageId}
+            </if>
+            <if test="courseId!=null and courseId!=0">
+                and edu_course_studyhistory.course_id=#{courseId}
+            </if>
+            <if test="userId!=null and userId!=0">
+                and edu_course_studyhistory.user_id=#{userId}
+            </if>
+        </where>
+    </select>
+
+    <select id="getstudystudyisok" resultType="java.lang.String">
+       SELECT  COUNT(1)
+            FROM edu_course_studyhistory
+        <where>
+            edu_course_studyhistory.complete='2'
+            <if test="courseId!=null and courseId!=0">
+                AND edu_course_studyhistory.course_id=#{courseId}
+            </if>
+            <if test="userId!=null and userId!=0">
+                AND edu_course_studyhistory.user_id=#{userId}
+            </if>
+            <if test="coursePackageId!=null and coursePackageId!=0">
+                AND edu_course_studyhistory.kpoint_course_id=#{coursePackageId}
+            </if>
+        </where>
+
+    </select>
+
+    <select id="getstudykpoint" resultType="java.lang.String">
+      SELECT
+          COUNT(1)
+        FROM
+          edu_course_kpoint
+        <where>
+            edu_course_kpoint.parent_id != 0
+            <if test="courseId!=null and courseId!=0">
+                AND edu_course_kpoint.course_id = #{courseId}
+            </if>
+        </where>
+    </select>
+
+    <select id="getPackageStudykpoint" resultType="java.lang.String">
+      SELECT
+          COUNT(1)
+        FROM
+          edu_course_kpoint
+          left join edu_course_package on edu_course_package.course_id = edu_course_kpoint.course_id
+        <where>
+            edu_course_kpoint.parent_id != 0
+            <if test="coursePackageId!=null and coursePackageId!=0">
+                AND edu_course_package.parent_course_id = #{coursePackageId}
+            </if>
+        </where>
+    </select>
+
+    <select id="getCourseList" resultMap="courseStudyKpointMap">
+        SELECT
+          edu_course_kpoint.course_id,
+          edu_course_kpoint.id kpointId,
+          edu_course_kpoint.id,
+          edu_course_kpoint.name ,
+          edu_course_kpoint.videoTime,
+          edu_course_kpoint.parent_id,
+          edu_course.sell_type
+         FROM edu_course_kpoint
+          left join edu_course
+            on edu_course.id=edu_course_kpoint.course_id
+            WHERE
+            edu_course_kpoint.course_id =#{e.courseId}
+            ORDER BY edu_course_kpoint.sort DESC
+    </select>
+
+    <select id="getCourseListSort" resultMap="courseStudyKpointMap">
+        SELECT
+          edu_course_kpoint.course_id,
+          edu_course_kpoint.id kpointId,
+          edu_course_kpoint.id,
+          edu_course_kpoint.name ,
+          edu_course_kpoint.videoTime,
+          edu_course_kpoint.parent_id,
+          edu_course.sell_type
+         FROM edu_course_kpoint
+          left join edu_course
+            on edu_course.id=edu_course_kpoint.course_id
+            WHERE
+            edu_course_kpoint.course_id =#{e.courseId}
+    </select>
+
+    <select id="getCoursepackageList" resultMap="courseStudyKpointMap">
+        SELECT
+        edu_course_package.course_id,
+        edu_course.course_name,
+        edu_course.sell_type
+        FROM
+        edu_course_package
+        LEFT JOIN edu_course
+        ON edu_course.id=edu_course_package.course_id
+        WHERE
+        edu_course_package.parent_course_id=#{e.courseId}
+        and edu_course.id is not null
+    </select>
+
+    <select id="getStudyHistory" resultType="CourseStudyhistory">
+       SELECT *
+       FROM edu_course_studyhistory
+       <where>
+           <if test="kpointId !=null and kpointId !=0 ">
+               edu_course_studyhistory.kpoint_id=#{kpointId}
+           </if>
+            <if test="userId !=null and userId !=0 ">
+                and edu_course_studyhistory.user_id=#{userId}
+           </if>
+            <if test="coursePackageId !=null and coursePackageId !=0 ">
+                and edu_course_studyhistory.kpoint_course_id=#{coursePackageId}
+           </if>
+           <if test="studyType!=0">
+               and edu_course_studyhistory.course_type=#{studyType}
+           </if>
+       </where>
+    </select>
+
+    <select id="getOnesStudyHistory" resultType="CourseStudyhistory">
+        SELECT *
+        FROM edu_course_studyhistory
+        <where>
+            edu_course_studyhistory.kpoint_id=#{kpointId}
+            and edu_course_studyhistory.user_id=#{userId}
+            and edu_course_studyhistory.course_type=#{studyType}
+            and edu_course_studyhistory.kpoint_course_id=#{packAgee}
+        </where>
+    </select>
+
+    <select id="getWatchNum" resultType="java.lang.String">
+      SELECT
+          IFNULL(sum(playercount),0)
+        FROM
+          edu_course_studyhistory
+        <where>
+            edu_course_studyhistory.course_id = #{courseId}
+            AND edu_course_studyhistory.kpoint_id = #{kpointId}
+            <if test="coursePackageId==0">
+                AND edu_course_studyhistory.kpoint_course_id is null
+            </if>
+            <if test="coursePackageId!=null and coursePackageId>0">
+                AND edu_course_studyhistory.kpoint_course_id=#{coursePackageId}
+            </if>
+        </where>
+    </select>
+
+    <select id="getCourseKpointStudyHistoryDateToMap" resultType="java.util.Map">
+        SELECT
+        edu_course_studyhistory.kpoint_id kpointId,
+        IFNULL(COUNT(edu_course_studyhistory.id),0) studyNum,
+        COUNT(IF(edu_course_studyhistory.complete=2,TRUE,NULL)) studyFinishNum,
+        IFNULL(sum(playercount),0) sumPlayerCount
+        FROM
+        edu_course_studyhistory
+        <where>
+            edu_course_studyhistory.course_id = #{courseId}
+            <if test="coursePackageId==0">
+                AND edu_course_studyhistory.kpoint_course_id = 0
+            </if>
+            <if test="coursePackageId>0">
+                AND edu_course_studyhistory.kpoint_course_id=#{coursePackageId}
+            </if>
+        </where>
+        group by edu_course_studyhistory.kpoint_id
+    </select>
+
+    <select id="getcoursepepo" resultType="java.lang.String">
+      SELECT
+            IFNULL(COUNT(DISTINCT user_id),0)
+            FROM
+            edu_trxorder_detail
+            <where>
+                 edu_trxorder_detail.course_id = #{courseId}
+                AND auth_status=2
+            </where>
+    </select>
+
+    <select id="getWatchShould" resultType="java.lang.String">
+      SELECT
+          IFNULL(COUNT(*),0)
+        FROM
+          edu_course_studyhistory
+        <where>
+            edu_course_studyhistory.course_id = #{courseId}
+            AND edu_course_studyhistory.kpoint_id = #{kpointId}
+            <if test="coursePackageId==0">
+                AND edu_course_studyhistory.kpoint_course_id is null
+            </if>
+            <if test="coursePackageId!=null and coursePackageId>0">
+                AND edu_course_studyhistory.kpoint_course_id=#{coursePackageId}
+            </if>
+        </where>
+    </select>
+
+    <select id="getWatchComplete" resultType="java.lang.String">
+      SELECT
+          IFNULL(COUNT(*),0)
+        FROM
+          edu_course_studyhistory
+        <where>
+            edu_course_studyhistory.course_id = #{courseId}
+            AND edu_course_studyhistory.kpoint_id = #{kpointId}
+            and edu_course_studyhistory.complete=2
+            <if test="coursePackageId==0">
+                AND edu_course_studyhistory.kpoint_course_id is null
+            </if>
+            <if test="coursePackageId!=null and coursePackageId>0">
+                AND edu_course_studyhistory.kpoint_course_id=#{coursePackageId}
+            </if>
+        </where>
+    </select>
+
+    <select id="selectCourseUser" resultMap="courseStudyhistoryResultMap">
+      SELECT
+         edu_trxorder_detail.user_id,
+         edu_student.mobile,
+         edu_student.user_name,
+         edu_student.show_name,
+         edu_student.realName,
+         edu_course.id as course_id,
+         edu_course.course_name,
+         edu_course_kpoint.id as kpoint_id,
+         edu_course_kpoint.name as kpoint_name,
+         edu_course_kpoint.videoTime
+         FROM edu_trxorder_detail
+             LEFT JOIN edu_student
+                ON edu_trxorder_detail.user_id=edu_student.id
+             LEFT JOIN edu_course
+                ON edu_trxorder_detail.course_id=edu_course.id
+             LEFT JOIN edu_course_kpoint
+                ON edu_course_kpoint.course_id=edu_course.id
+              <where> edu_trxorder_detail.course_id=#{e.courseId}
+                    AND edu_course_kpoint.id=#{e.kpointId}
+                    AND edu_trxorder_detail.auth_status=2
+                    AND (edu_trxorder_detail.trxorder_type='COURSE' OR edu_trxorder_detail.trxorder_type='LIVE' OR edu_trxorder_detail.trxorder_type='PACKAGE')
+                    <if test="e.popeType=='NO'">
+                        AND edu_trxorder_detail.user_id NOT IN (#{e.userIdList})
+                    </if>
+                  <if test="e.mobile!=null and e.mobile!=''">
+                      and edu_student.mobile like concat('%',#{e.mobile},'%')
+                  </if>
+                  <if test="e.userName!=null and e.userName!=''">
+                      and edu_student.user_name like concat('%',#{e.userName},'%')
+                  </if>
+                  <if test="e.showName!=null and e.showName!=''">
+                      and edu_student.show_name like concat('%',#{e.showName},'%')
+                  </if>
+                  <if test="e.realName!=null and e.realName!=''">
+                      and edu_student.realName like concat('%',#{e.realName},'%')
+                  </if>
+              </where>
+        GROUP BY edu_trxorder_detail.user_id
+    </select>
+
+    <select id="selectCourseUserNoPage" resultMap="courseStudyhistoryResultMap">
+        SELECT
+        edu_trxorder_detail.user_id,
+        edu_student.mobile,
+        edu_student.user_name,
+        edu_student.show_name,
+        edu_student.realName,
+        edu_course.id as course_id,
+        edu_course.course_name,
+        edu_course_kpoint.id as kpoint_id,
+        edu_course_kpoint.name as kpoint_name,
+        edu_course_kpoint.videoTime
+        FROM edu_trxorder_detail
+        LEFT JOIN edu_student
+        ON edu_trxorder_detail.user_id=edu_student.id
+        LEFT JOIN edu_course
+        ON edu_trxorder_detail.course_id=edu_course.id
+        LEFT JOIN edu_course_kpoint
+        ON edu_course_kpoint.course_id=edu_course.id
+        <where> edu_trxorder_detail.course_id=#{e.courseId}
+            AND edu_course_kpoint.id=#{e.kpointId}
+            AND edu_trxorder_detail.auth_status=2
+            AND (edu_trxorder_detail.trxorder_type='COURSE' OR edu_trxorder_detail.trxorder_type='LIVE' OR edu_trxorder_detail.trxorder_type='PACKAGE')
+            <if test="e.popeType=='NO'">
+                AND edu_trxorder_detail.user_id NOT IN (#{e.userIdList})
+            </if>
+            <if test="e.mobile!=null and e.mobile!=''">
+                and edu_student.mobile like concat('%',#{e.mobile},'%')
+            </if>
+            <if test="e.userName!=null and e.userName!=''">
+                and edu_student.user_name like concat('%',#{e.userName},'%')
+            </if>
+            <if test="e.showName!=null and e.showName!=''">
+                and edu_student.show_name like concat('%',#{e.showName},'%')
+            </if>
+            <if test="e.realName!=null and e.realName!=''">
+                and edu_student.realName like concat('%',#{e.realName},'%')
+            </if>
+        </where>
+        GROUP BY edu_trxorder_detail.user_id
+    </select>
+
+    <select id="selectStudentShouldAndComplete" resultMap="courseStudyhistoryResultMap">
+      SELECT
+         edu_course_studyhistory.user_id,
+         edu_student.mobile,
+         edu_student.user_name,
+         edu_student.show_name,
+         edu_student.realName,
+         edu_course.id as course_id,
+         edu_course.course_name,
+         edu_course_kpoint.id as kpoint_id,
+         edu_course_kpoint.name as kpoint_name,
+         edu_course_kpoint.videoTime
+         FROM edu_course_studyhistory
+         LEFT JOIN edu_student
+		ON edu_course_studyhistory.user_id=edu_student.id
+         LEFT JOIN edu_course
+            ON edu_course_studyhistory.course_id=edu_course.id
+         LEFT JOIN edu_course_kpoint
+		ON edu_course_studyhistory.kpoint_id=edu_course_kpoint.id
+		<where>
+              edu_course_studyhistory.course_id=#{e.courseId}
+		      AND edu_course_studyhistory.kpoint_id=#{e.kpointId}
+              AND edu_course_studyhistory.course_type=1
+            <if test="e.popeType=='COMPLETE'">
+                AND edu_course_studyhistory.complete=2
+            </if>
+            <if test="e.mobile!=null and e.mobile!=''">
+                and edu_student.mobile like concat('%',#{e.mobile},'%')
+            </if>
+            <if test="e.userName!=null and e.userName!=''">
+                and edu_student.user_name like concat('%',#{e.userName},'%')
+            </if>
+            <if test="e.showName!=null and e.showName!=''">
+                and edu_student.show_name like concat('%',#{e.showName},'%')
+            </if>
+            <if test="e.realName!=null and e.realName!=''">
+                and edu_student.realName like concat('%',#{e.realName},'%')
+            </if>
+        </where>
+    </select>
+
+    <select id="selectStudentShouldAndCompleteNoPage" resultMap="courseStudyhistoryResultMap">
+        SELECT
+        edu_course_studyhistory.user_id,
+        edu_student.mobile,
+        edu_student.user_name,
+        edu_student.show_name,
+        edu_student.realName,
+        edu_course.id as course_id,
+        edu_course.course_name,
+        edu_course_kpoint.id as kpoint_id,
+        edu_course_kpoint.name as kpoint_name,
+        edu_course_kpoint.videoTime
+        FROM edu_course_studyhistory
+        LEFT JOIN edu_student
+        ON edu_course_studyhistory.user_id=edu_student.id
+        LEFT JOIN edu_course
+        ON edu_course_studyhistory.course_id=edu_course.id
+        LEFT JOIN edu_course_kpoint
+        ON edu_course_studyhistory.kpoint_id=edu_course_kpoint.id
+        <where>
+            edu_course_studyhistory.course_id=#{e.courseId}
+            AND edu_course_studyhistory.kpoint_id=#{e.kpointId}
+            AND edu_course_studyhistory.course_type=1
+            <if test="e.popeType=='COMPLETE'">
+                AND edu_course_studyhistory.complete=2
+            </if>
+            <if test="e.mobile!=null and e.mobile!=''">
+                and edu_student.mobile like concat('%',#{e.mobile},'%')
+            </if>
+            <if test="e.userName!=null and e.userName!=''">
+                and edu_student.user_name like concat('%',#{e.userName},'%')
+            </if>
+            <if test="e.showName!=null and e.showName!=''">
+                and edu_student.show_name like concat('%',#{e.showName},'%')
+            </if>
+            <if test="e.realName!=null and e.realName!=''">
+                and edu_student.realName like concat('%',#{e.realName},'%')
+            </if>
+        </where>
+    </select>
+
+    <select id="getPackageList" resultMap="courseStudyKpointMap">
+        SELECT
+        user_id
+        FROM
+        edu_trxorder_detail
+        WHERE edu_trxorder_detail.course_id=#{e.courseId}
+        AND edu_trxorder_detail.auth_status=2
+        AND trxorder_type='PACKAGE'
+        GROUP BY user_id
+    </select>
+
+    <select id="getCourseWatchNum" resultType="java.lang.String">
+        SELECT
+            IFNULL(sum(playercount),0)
+            FROM edu_course_studyhistory
+            WHERE course_id=#{courseId}
+              AND user_id IN (#{userList})
+              AND course_type=2
+    </select>
+
+    <select id="getCourseWatchTime" resultType="java.lang.Integer">
+        SELECT
+            IFNULL(SUM(videoTime),0)
+            FROM edu_course_kpoint
+            WHERE course_id=#{courseId}
+    </select>
+
+    <select id="selectNoStudy" resultMap="courseStudyhistoryResultMap">
+               SELECT
+                 edu_trxorder_detail.user_id,
+                 edu_student.mobile,
+                 edu_student.user_name,
+                 edu_student.show_name,
+                 edu_student.realName,
+                 edu_course.id AS course_id,
+                 edu_course.course_name,
+                 edu_course_kpoint.id AS kpoint_id,
+                 edu_course_kpoint.name AS kpoint_name,
+                 edu_course_kpoint.videoTime
+                    FROM
+                      edu_trxorder_detail
+                        LEFT JOIN edu_course_studyhistory
+                        ON edu_course_studyhistory.user_id  = edu_trxorder_detail.user_id   AND edu_course_studyhistory.course_id =#{e.courseId}  AND edu_course_studyhistory.kpoint_id=#{e.kpointId}
+                        LEFT JOIN edu_student
+                        ON edu_student.id  = edu_trxorder_detail.user_id
+                        LEFT JOIN edu_course
+                        ON edu_trxorder_detail.course_id=edu_course.id
+                        LEFT JOIN edu_course_kpoint
+                        ON edu_course_kpoint.course_id=edu_course.id
+                            <where> edu_trxorder_detail.course_id = #{e.courseId}
+                              AND edu_trxorder_detail.auth_status = 2
+                              AND edu_course_studyhistory.id IS NULL
+                                <if test="e.mobile!=null and e.mobile!=''">
+                                    and edu_student.mobile like concat('%',#{e.mobile},'%')
+                                </if>
+                                <if test="e.userName!=null and e.userName!=''">
+                                    and edu_student.user_name like concat('%',#{e.userName},'%')
+                                </if>
+                                <if test="e.showName!=null and e.showName!=''">
+                                    and edu_student.show_name like concat('%',#{e.showName},'%')
+                                </if>
+                                <if test="e.realName!=null and e.realName!=''">
+                                    and edu_student.realName like concat('%',#{e.realName},'%')
+                                </if>
+                            </where>
+                              GROUP BY edu_trxorder_detail.user_id
+    </select>
+
+    <select id="selectNoStudyNoPage" resultMap="courseStudyhistoryResultMap">
+        SELECT
+        edu_trxorder_detail.user_id,
+        edu_student.mobile,
+        edu_student.user_name,
+        edu_student.show_name,
+        edu_student.realName,
+        edu_course.id AS course_id,
+        edu_course.course_name,
+        edu_course_kpoint.id AS kpoint_id,
+        edu_course_kpoint.name AS kpoint_name,
+        edu_course_kpoint.videoTime
+        FROM
+        edu_trxorder_detail
+        LEFT JOIN edu_course_studyhistory
+        ON edu_course_studyhistory.user_id  = edu_trxorder_detail.user_id   AND edu_course_studyhistory.course_id =#{e.courseId}  AND edu_course_studyhistory.kpoint_id=#{e.kpointId}
+        LEFT JOIN edu_student
+        ON edu_student.id  = edu_trxorder_detail.user_id
+        LEFT JOIN edu_course
+        ON edu_trxorder_detail.course_id=edu_course.id
+        LEFT JOIN edu_course_kpoint
+        ON edu_course_kpoint.course_id=edu_course.id
+        <where> edu_trxorder_detail.course_id = #{e.courseId}
+            AND edu_trxorder_detail.auth_status = 2
+            AND edu_course_studyhistory.id IS NULL
+            <if test="e.mobile!=null and e.mobile!=''">
+                and edu_student.mobile like concat('%',#{e.mobile},'%')
+            </if>
+            <if test="e.userName!=null and e.userName!=''">
+                and edu_student.user_name like concat('%',#{e.userName},'%')
+            </if>
+            <if test="e.showName!=null and e.showName!=''">
+                and edu_student.show_name like concat('%',#{e.showName},'%')
+            </if>
+            <if test="e.realName!=null and e.realName!=''">
+                and edu_student.realName like concat('%',#{e.realName},'%')
+            </if>
+        </where>
+        GROUP BY edu_trxorder_detail.user_id
+    </select>
+
+    <select id="selectPackageNoStudy" resultMap="courseStudyhistoryResultMap">
+               SELECT
+                 edu_trxorder_detail.user_id,
+                 edu_student.mobile,
+                 edu_student.user_name,
+                 edu_student.show_name,
+                 edu_student.realName
+                    FROM
+                      edu_trxorder_detail
+                        LEFT JOIN edu_course_studyhistory
+                        ON edu_course_studyhistory.user_id  = edu_trxorder_detail.user_id   AND edu_course_studyhistory.course_id =#{e.courseId}  AND edu_course_studyhistory.kpoint_id=#{e.kpointId} AND edu_course_studyhistory.course_type ='2'  AND edu_course_studyhistory.kpoint_course_id=#{e.kpointCourseId}
+                        LEFT JOIN edu_student
+                        ON edu_student.id  = edu_trxorder_detail.user_id
+                          <where> edu_trxorder_detail.course_id = #{e.kpointCourseId}
+                              AND edu_trxorder_detail.auth_status = 2
+                              AND edu_course_studyhistory.id IS NULL
+                              AND trxorder_type='PACKAGE'
+                              <if test="e.mobile!=null and e.mobile!=''">
+                                  and edu_student.mobile like concat('%',#{e.mobile},'%')
+                              </if>
+                              <if test="e.userName!=null and e.userName!=''">
+                                  and edu_student.user_name like concat('%',#{e.userName},'%')
+                              </if>
+                              <if test="e.showName!=null and e.showName!=''">
+                                  and edu_student.show_name like concat('%',#{e.showName},'%')
+                              </if>
+                              <if test="e.realName!=null and e.realName!=''">
+                                  and edu_student.realName like concat('%',#{e.realName},'%')
+                              </if>
+                          </where>
+                              GROUP BY edu_trxorder_detail.user_id
+    </select>
+
+    <select id="selectPackageNoStudyNoPage" resultMap="courseStudyhistoryResultMap">
+        SELECT
+        edu_trxorder_detail.user_id,
+        edu_student.mobile,
+        edu_student.user_name,
+        edu_student.show_name,
+        edu_student.realName
+        FROM
+        edu_trxorder_detail
+        LEFT JOIN edu_course_studyhistory
+        ON edu_course_studyhistory.user_id  = edu_trxorder_detail.user_id   AND edu_course_studyhistory.course_id =#{e.courseId}  AND edu_course_studyhistory.kpoint_id=#{e.kpointId} AND edu_course_studyhistory.course_type ='2'  AND edu_course_studyhistory.kpoint_course_id=#{e.kpointCourseId}
+        LEFT JOIN edu_student
+        ON edu_student.id  = edu_trxorder_detail.user_id
+        <where> edu_trxorder_detail.course_id = #{e.kpointCourseId}
+            AND edu_trxorder_detail.auth_status = 2
+            AND edu_course_studyhistory.id IS NULL
+            AND trxorder_type='PACKAGE'
+            <if test="e.mobile!=null and e.mobile!=''">
+                and edu_student.mobile like concat('%',#{e.mobile},'%')
+            </if>
+            <if test="e.userName!=null and e.userName!=''">
+                and edu_student.user_name like concat('%',#{e.userName},'%')
+            </if>
+            <if test="e.showName!=null and e.showName!=''">
+                and edu_student.show_name like concat('%',#{e.showName},'%')
+            </if>
+            <if test="e.realName!=null and e.realName!=''">
+                and edu_student.realName like concat('%',#{e.realName},'%')
+            </if>
+        </where>
+        GROUP BY edu_trxorder_detail.user_id
+    </select>
+
+    <select id="getPackageUserList" resultMap="courseStudyhistoryResultMap">
+        SELECT
+         edu_trxorder_detail.user_id,
+         edu_student.mobile,
+         edu_student.user_name,
+         edu_student.show_name,
+         edu_student.realName
+        FROM
+        edu_trxorder_detail
+         LEFT JOIN edu_student
+         ON edu_student.id  = edu_trxorder_detail.user_id
+        <where>
+            edu_trxorder_detail.course_id=#{e.kpointCourseId}
+            AND edu_trxorder_detail.auth_status=2
+            AND edu_trxorder_detail.trxorder_type='PACKAGE'
+            <if test="e.mobile!=null and e.mobile!=''">
+                and edu_student.mobile like concat('%',#{e.mobile},'%')
+            </if>
+            <if test="e.userName!=null and e.userName!=''">
+                and edu_student.user_name like concat('%',#{e.userName},'%')
+            </if>
+            <if test="e.showName!=null and e.showName!=''">
+                and edu_student.show_name like concat('%',#{e.showName},'%')
+            </if>
+            <if test="e.realName!=null and e.realName!=''">
+                and edu_student.realName like concat('%',#{e.realName},'%')
+            </if>
+        </where>
+        GROUP BY user_id
+    </select>
+
+    <select id="getPackageUserListNoPage" resultMap="courseStudyhistoryResultMap">
+        SELECT
+        edu_trxorder_detail.user_id,
+        edu_student.mobile,
+        edu_student.user_name,
+        edu_student.show_name,
+        edu_student.realName
+        FROM
+        edu_trxorder_detail
+        LEFT JOIN edu_student
+        ON edu_student.id  = edu_trxorder_detail.user_id
+        <where>
+            edu_trxorder_detail.course_id=#{e.kpointCourseId}
+            AND edu_trxorder_detail.auth_status=2
+            AND edu_trxorder_detail.trxorder_type='PACKAGE'
+            <if test="e.mobile!=null and e.mobile!=''">
+                and edu_student.mobile like concat('%',#{e.mobile},'%')
+            </if>
+            <if test="e.userName!=null and e.userName!=''">
+                and edu_student.user_name like concat('%',#{e.userName},'%')
+            </if>
+            <if test="e.showName!=null and e.showName!=''">
+                and edu_student.show_name like concat('%',#{e.showName},'%')
+            </if>
+            <if test="e.realName!=null and e.realName!=''">
+                and edu_student.realName like concat('%',#{e.realName},'%')
+            </if>
+        </where>
+        GROUP BY user_id
+    </select>
+
+    <select id="getKpointAndCourse" resultMap="courseStudyhistoryResultMap">
+       SELECT
+         edu_course.id as course_id,
+         edu_course.course_name,
+         edu_course_kpoint.id as kpoint_id,
+         edu_course_kpoint.name as kpoint_name,
+         edu_course_kpoint.videoTime
+          FROM edu_course
+            LEFT JOIN
+            edu_course_kpoint ON edu_course.id=edu_course_kpoint.course_id
+            WHERE edu_course_kpoint.course_id=#{courseId} AND edu_course_kpoint.id=#{kpointId}
+    </select>
+
+    <select id="selectPackageStudentShouldAndComplete" resultMap="courseStudyhistoryResultMap">
+                SELECT
+                 edu_course_studyhistory.user_id,
+                 edu_student.mobile,
+                 edu_student.user_name,
+                 edu_student.show_name,
+                 edu_student.realName,
+                 edu_course.id AS course_id,
+                 edu_course.course_name,
+                 edu_course_kpoint.id AS kpoint_id,
+                 edu_course_kpoint.name AS kpoint_name,
+                 edu_course_kpoint.videoTime
+                     FROM edu_course_studyhistory
+                        LEFT JOIN edu_student
+                        ON edu_student.id  = edu_course_studyhistory.user_id
+                        LEFT JOIN edu_course
+                        ON edu_course_studyhistory.course_id=edu_course.id
+                        LEFT JOIN edu_course_kpoint
+                        ON edu_course_kpoint.id=edu_course_studyhistory.kpoint_id
+                             <where>
+                                     edu_course_studyhistory.course_type='2'
+                                     AND edu_course_studyhistory.course_id=#{e.courseId}
+                                     AND edu_course_studyhistory.kpoint_id=#{e.kpointId}
+                                     AND edu_course_studyhistory.kpoint_course_id=#{e.kpointCourseId}
+                                 <if test="e.popeType=='COMPLETE'">
+                                     AND edu_course_studyhistory.complete=2
+                                 </if>
+                                 <if test="e.mobile!=null and e.mobile!=''">
+                                     and edu_student.mobile like concat('%',#{e.mobile},'%')
+                                 </if>
+                                 <if test="e.userName!=null and e.userName!=''">
+                                     and edu_student.user_name like concat('%',#{e.userName},'%')
+                                 </if>
+                                 <if test="e.showName!=null and e.showName!=''">
+                                     and edu_student.show_name like concat('%',#{e.showName},'%')
+                                 </if>
+                                 <if test="e.realName!=null and e.realName!=''">
+                                     and edu_student.realName like concat('%',#{e.realName},'%')
+                                 </if>
+                             </where>
+    </select>
+
+    <select id="selectPackageStudentShouldAndCompleteNoPage" resultMap="courseStudyhistoryResultMap">
+        SELECT
+        edu_course_studyhistory.user_id,
+        edu_student.mobile,
+        edu_student.user_name,
+        edu_student.show_name,
+        edu_student.realName,
+        edu_course.id AS course_id,
+        edu_course.course_name,
+        edu_course_kpoint.id AS kpoint_id,
+        edu_course_kpoint.name AS kpoint_name,
+        edu_course_kpoint.videoTime
+        FROM edu_course_studyhistory
+        LEFT JOIN edu_student
+        ON edu_student.id  = edu_course_studyhistory.user_id
+        LEFT JOIN edu_course
+        ON edu_course_studyhistory.course_id=edu_course.id
+        LEFT JOIN edu_course_kpoint
+        ON edu_course_kpoint.id=edu_course_studyhistory.kpoint_id
+        <where>
+            edu_course_studyhistory.course_type='2'
+            AND edu_course_studyhistory.course_id=#{e.courseId}
+            AND edu_course_studyhistory.kpoint_id=#{e.kpointId}
+            AND edu_course_studyhistory.kpoint_course_id=#{e.kpointCourseId}
+            <if test="e.popeType=='COMPLETE'">
+                AND edu_course_studyhistory.complete=2
+            </if>
+            <if test="e.mobile!=null and e.mobile!=''">
+                and edu_student.mobile like concat('%',#{e.mobile},'%')
+            </if>
+            <if test="e.userName!=null and e.userName!=''">
+                and edu_student.user_name like concat('%',#{e.userName},'%')
+            </if>
+            <if test="e.showName!=null and e.showName!=''">
+                and edu_student.show_name like concat('%',#{e.showName},'%')
+            </if>
+            <if test="e.realName!=null and e.realName!=''">
+                and edu_student.realName like concat('%',#{e.realName},'%')
+            </if>
+        </where>
+    </select>
+
+    <select id="getCourseUserList" resultMap="courseStudyhistoryResultMap">
+        SELECT
+         edu_trxorder_detail.user_id,
+         edu_trxorder_detail.auth_time,
+         edu_trxorder_detail.pay_time,
+         edu_student.mobile,
+         edu_student.user_name,
+         edu_student.show_name,
+         edu_trxorder_detail.course_id,
+         edu_student.realName
+        FROM
+        edu_trxorder_detail
+         LEFT JOIN edu_student
+         ON edu_student.id  = edu_trxorder_detail.user_id
+        WHERE edu_trxorder_detail.course_id=#{e.courseId}
+        AND edu_trxorder_detail.auth_status=2
+        <if test="e.mobile !=null and e.mobile !='' ">
+            and edu_student.mobile like  concat('%',#{e.mobile},'%')
+        </if>
+        <if test="e.userName !=null and e.userName !='' ">
+            and edu_student.user_name like  concat('%',#{e.userName},'%')
+        </if>
+        <if test="e.showName !=null and e.showName !='' ">
+            and edu_student.show_name like  concat('%',#{e.showName},'%')
+        </if>
+        <if test="e.realName !=null and e.realName !='' ">
+            and edu_student.realName like  concat('%',#{e.realName},'%')
+        </if>
+        GROUP BY edu_trxorder_detail.user_id
+        order by edu_trxorder_detail.id desc
+    </select>
+
+    <delete id="removeByKpointId" parameterType="int">
+        delete from edu_course_studyhistory where kpoint_id = #{id}
+    </delete>
+</mapper>

@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.springcrazy.modules.edu.mapper.LiveRoomMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="liveRoomResultMap" type="org.springcrazy.modules.edu.entity.LiveRoom">
+        <id column="id" property="id"/>
+        <result column="create_user" property="createUser"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_user" property="updateUser"/>
+        <result column="update_time" property="updateTime"/>
+        <result column="status" property="status"/>
+        <result column="is_deleted" property="isDeleted"/>
+        <result column="name" property="name"/>
+        <result column="classroom_id" property="classroomId"/>
+        <result column="room_type" property="roomType"/>
+        <result column="start_time" property="startTime"/>
+        <result column="end_time" property="endTime"/>
+        <result column="room_status" property="roomStatus"/>
+    </resultMap>
+
+
+    <select id="selectLiveRoomPage" resultMap="liveRoomResultMap">
+        select * from edu_live_room where is_deleted = 0
+    </select>
+
+</mapper>

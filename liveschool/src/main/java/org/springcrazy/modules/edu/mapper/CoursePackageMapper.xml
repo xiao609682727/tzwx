@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.springcrazy.modules.edu.mapper.CoursePackageMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="coursePackageResultMap" type="org.springcrazy.modules.edu.entity.CoursePackage">
+        <id column="id" property="id"/>
+        <result column="parent_course_id" property="parentCourseId"/>
+        <result column="course_id" property="courseId"/>
+        <result column="sort" property="sort"/>
+    </resultMap>
+
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="coursePackageVOResultMap" type="org.springcrazy.modules.edu.vo.CoursePackageVO">
+        <id column="id" property="id"/>
+        <result column="parent_course_id" property="parentCourseId"/>
+        <result column="course_id" property="courseId"/>
+        <result column="sort" property="sort"/>
+        <result column="course_name" property="courseName"/>
+        <result column="sell_type" property="sellType"/>
+        <result column="current_price" property="currentPrice"/>
+        <result column="logo" property="logo"/>
+        <result column="title" property="title"/>
+    </resultMap>
+
+
+    <select id="selectCoursePackagePage" resultMap="coursePackageVOResultMap">
+        select edu_course_package.id as id, edu_course_package.parent_course_id ,edu_course_package.course_id ,edu_course_package.sort ,edu_course.course_name,edu_course.sell_type ,edu_course.current_price
+         from edu_course_package  left join edu_course on edu_course_package.course_id = edu_course.id
+         <where>
+             
+             <if test="coursePackage.parentCourseId !=null and coursePackage.parentCourseId !='' ">
+                 and edu_course_package.parent_course_id = #{coursePackage.parentCourseId}
+             </if>
+             <if test="coursePackage.courseName !=null and coursePackage.courseName !='' ">
+                 and edu_course.course_name like concat('%',#{coursePackage.courseName},'%')
+             </if>
+             <if test="coursePackage.sellType !=null and coursePackage.sellType !='' ">
+                 and edu_course.sell_type = #{coursePackage.sellType}
+             </if>
+         </where>
+        order by edu_course_package.sort desc
+    </select>
+
+
+    <select id="selectCoursePackageList" resultMap="coursePackageVOResultMap">
+        select edu_course_package.id as id, edu_course_package.parent_course_id ,edu_course_package.course_id ,edu_course_package.sort ,edu_course.course_name,edu_course.sell_type ,edu_course.current_price
+        ,edu_course.title,edu_course.logo
+        from edu_course_package  left join edu_course on edu_course_package.course_id = edu_course.id
+        <where>
+
+            <if test="parentCourseId !=null and parentCourseId !='' ">
+                and edu_course_package.parent_course_id = #{parentCourseId}
+            </if>
+            <if test="courseName !=null and courseName !='' ">
+                and edu_course.course_name like concat('%',#{courseName},'%')
+            </if>
+            <if test="sellType !=null and sellType !='' ">
+                and edu_course.sell_type = #{sellType}
+            </if>
+        </where>
+        order by edu_course_package.sort desc
+    </select>
+</mapper>

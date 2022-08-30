@@ -1,0 +1,208 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.springcrazy.modules.edu.mapper.OrdersMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="ordersResultMap" type="org.springcrazy.modules.edu.vo.OrdersVO">
+        <id column="id" property="id"/>
+        <result column="user_id" property="userId"/>
+        <result column="order_no" property="orderNo"/>
+        <result column="sum_money" property="sumMoney"/>
+        <result column="states" property="states"/>
+        <result column="create_time" property="createTime"/>
+        <result column="pay_time" property="payTime"/>
+        <result column="sys_user_id" property="sysUserId"/>
+        <result column="pay_type" property="payType"/>
+        <result column="req_channel" property="reqChannel"/>
+        <result column="description" property="description"/>
+        <result column="req_ip" property="reqIp"/>
+        <result column="order_amount" property="orderAmount"/>
+        <result column="cash_amount" property="cashAmount"/>
+        <result column="vm_amount" property="vmAmount"/>
+        <result column="back_amount" property="backAmount"/>
+        <result column="coupon_amount" property="couponAmount"/>
+        <result column="couponcode_id" property="couponcodeId"/>
+        <result column="bargainAmount" property="bargainAmount"/>
+        <result column="bargain_publishId" property="bargainPublishid"/>
+        <result column="refund_amount" property="refundAmount"/>
+        <result column="out_trade_no" property="outTradeNo"/>
+        <result column="order_type" property="orderType"/>
+        <result column="mobile" property="mobile"/>
+        <result column="email" property="email"/>
+        <result column="user_name" property="userName"/>
+        <result column="login_account" property="loginAccount"/>
+    </resultMap>
+
+
+    <select id="selectOrdersPage" resultMap="ordersResultMap">
+        select
+        edu_orders.*,
+        edu_student.mobile,
+        edu_student.user_name,
+        edu_student.show_name,
+        edu_student.realName
+        from edu_orders
+        left join edu_student on edu_orders.user_id = edu_student.id
+        left join edu_trxorder_detail on edu_orders.order_no = edu_trxorder_detail.order_no
+        <where>
+        <if test="orders.loginAccount !=null and orders.loginAccount !='' ">
+            and (edu_student.login_account = #{orders.loginAccount} or
+            edu_student.mobile = #{orders.loginAccount} or
+            edu_student.email = #{orders.loginAccount} or
+            edu_student.user_name = #{orders.loginAccount} )
+        </if>
+        <if test="orders.userId !=null and orders.userId !='' ">
+            and edu_orders.user_id = #{orders.userId}
+        </if>
+        <if test="orders.courseId !=null and orders.courseId !='' ">
+            and edu_trxorder_detail.course_id = #{orders.courseId}
+        </if>
+        <if test="orders.orderType !=null and orders.orderType !='' ">
+            and edu_orders.order_type in
+            <foreach item="item" index="index" collection="orders.orderType.split(',')"  open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+        <if test="orders.mobile !=null and orders.mobile !='' ">
+            and edu_student.mobile  like concat('%',#{orders.mobile},'%')
+        </if>
+        <if test="orders.email !=null and orders.email !='' ">
+            and edu_student.email  like concat('%',#{orders.email},'%')
+        </if>
+        <if test="orders.userName !=null and orders.userName !='' ">
+            and edu_student.user_name  like concat('%',#{orders.userName},'%')
+        </if>
+        <if test="orders.orderNo !=null and orders.orderNo !='' ">
+            and edu_orders.order_no  like concat('%',#{orders.orderNo},'%')
+        </if>
+        <if test="orders.states !=null and orders.states !='' ">
+            and edu_orders.states = #{orders.states}
+        </if>
+        <if test="orders.payType !=null and orders.payType !='' ">
+            and edu_orders.pay_type = #{orders.payType}
+        </if>
+        <if test="orders.createTime !=null ">
+            and DATE_FORMAT(edu_orders.create_time, '%Y-%m-%d %H:%i:%S') <![CDATA[ >= ]]> DATE_FORMAT(#{orders.createTime}, '%Y-%m-%d %H:%i:%S')
+        </if>
+        <if test="orders.endTime !=null ">
+            and DATE_FORMAT(edu_orders.create_time, '%Y-%m-%d %H:%i:%S') <![CDATA[ <= ]]> DATE_FORMAT(#{orders.endTime}, '%Y-%m-%d %H:%i:%S')
+        </if>
+        </where>
+        group by edu_orders.id
+        order by edu_orders.id desc
+    </select>
+
+    <select id="selectOrdersPageList" resultMap="ordersResultMap">
+        select * from edu_orders , edu_student where edu_orders.user_id = edu_student.id
+        <if test="orders.orderNo !=null and orders.orderNo !='' ">
+            and edu_orders.order_no  like concat('%',#{orders.orderNo},'%')
+        </if>
+        <if test="orders.orderType !=null and orders.orderType !='' ">
+            and edu_orders.order_type in
+            <foreach item="item" index="index" collection="orders.orderType.split(',')"  open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+        <if test="orders.mobile !=null and orders.mobile !='' ">
+            and edu_student.mobile  like concat('%',#{orders.mobile},'%')
+        </if>
+        <if test="orders.email !=null and orders.email !='' ">
+            and edu_student.email  like concat('%',#{orders.email},'%')
+        </if>
+        <if test="orders.userName !=null and orders.userName !='' ">
+            and edu_student.user_name  like concat('%',#{orders.userName},'%')
+        </if>
+        <if test="orders.createTime !=null ">
+            and DATE_FORMAT(edu_orders.create_time, '%Y-%m-%d %H:%i:%S') <![CDATA[ >= ]]> DATE_FORMAT(#{orders.createTime}, '%Y-%m-%d %H:%i:%S')
+        </if>
+        <if test="orders.endTime !=null ">
+            and DATE_FORMAT(edu_orders.create_time, '%Y-%m-%d %H:%i:%S') <![CDATA[ <= ]]> DATE_FORMAT(#{orders.endTime}, '%Y-%m-%d %H:%i:%S')
+        </if>
+        AND (pay_type = 2 OR pay_type = 1) AND states=2
+    </select>
+    <select id="selectOrderStatisticsPage" resultMap="ordersResultMap">
+        SELECT
+        create_time as createTimeStatis,
+        COUNT(id) AS volume,
+        edu_orders.create_time,
+        SUM(sum_money) AS  actualIncome
+        FROM  edu_orders
+        WHERE
+         DATE_FORMAT(edu_orders.create_time,'%Y-%m-%d %H:%i:%S') <![CDATA[ >= ]]> DATE_FORMAT(#{orders.createTimeStatis},'%Y-%m-%d %H:%i:%S')
+        AND DATE_FORMAT(edu_orders.create_time,'%Y-%m-%d %H:%i:%S') <![CDATA[ < ]]> DATE_FORMAT(#{orders.endTimeStatis},'%Y-%m-%d %H:%i:%S')
+         AND (pay_type = 2 OR pay_type = 1) AND states=2
+        GROUP BY SUBSTRING(create_time, 1, 10)
+    </select>
+
+    <select id="selectOrderMoney" resultType="java.util.HashMap">
+        select sum(sum_money) as sum_money from edu_orders
+        <where>
+            states = '2'
+            <if test="createTime != null">
+                and date_format(create_time,'%Y%m%d') = #{createTime}
+            </if>
+
+        </where>
+    </select>
+    <select id="exportOrder" resultType="org.springcrazy.modules.system.excel.ExportOrderExcel">
+        SELECT
+        create_time as createTimeStatis,
+        COUNT(id) AS volume,
+        SUM(sum_money) AS  actualIncome
+        FROM  edu_orders
+        WHERE
+        DATE_FORMAT(edu_orders.create_time,'%Y-%m-%d %H:%i:%S') <![CDATA[ >= ]]> DATE_FORMAT(#{startTime},'%Y-%m-%d %H:%i:%S')
+        AND DATE_FORMAT(edu_orders.create_time,'%Y-%m-%d %H:%i:%S') <![CDATA[ <= ]]> DATE_FORMAT(#{endTime},'%Y-%m-%d %H:%i:%S')
+         AND (pay_type = 2 OR pay_type = 1) AND states=2
+        GROUP BY SUBSTRING(create_time, 1, 10)
+    </select>
+
+    <select id="exportOrders" resultType="org.springcrazy.modules.system.excel.ExportOrdersExcel">
+        SELECT
+        edu_orders.*,
+        edu_student.mobile,
+        edu_student.user_name,
+        edu_student.show_name,
+        edu_student.realName
+        from edu_orders
+        left join edu_student on edu_orders.user_id = edu_student.id
+        left join edu_trxorder_detail on edu_orders.order_no = edu_trxorder_detail.order_no
+        <where> 1=1
+            <if test="ew.orderNo !=null and ew.orderNo !='' ">
+                and edu_orders.order_no  like concat('%',#{ew.orderNo},'%')
+            </if>
+            <if test="ew.mobile !=null and ew.mobile !='' ">
+                and edu_student.mobile  like concat('%',#{ew.mobile},'%')
+            </if>
+            <if test="ew.email !=null and ew.email !='' ">
+                and edu_student.email  like concat('%',#{ew.email},'%')
+            </if>
+            <if test="ew.userName !=null and ew.userName !='' ">
+                and edu_student.user_name  like concat('%',#{ew.userName},'%')
+            </if>
+            <if test="ew.states !=null and ew.states !='' ">
+                and edu_orders.states = #{ew.states}
+            </if>
+            <if test="ew.createTime !=null ">
+                and DATE_FORMAT(edu_orders.create_time, '%Y-%m-%d %H:%i:%S') <![CDATA[ >= ]]> DATE_FORMAT(#{ew.createTime}, '%Y-%m-%d %H:%i:%S')
+            </if>
+            <if test="ew.endTime !=null ">
+                and DATE_FORMAT(edu_orders.create_time, '%Y-%m-%d %H:%i:%S') <![CDATA[ <= ]]> DATE_FORMAT(#{ew.endTime}, '%Y-%m-%d %H:%i:%S')
+            </if>
+            <if test="ew.payType !=null and ew.payType !='' ">
+                and edu_orders.pay_type = #{ew.payType}
+            </if>
+            <if test="ew.orderType !=null and ew.orderType !='' ">
+                and edu_orders.order_type = #{ew.orderType}
+            </if>
+            <if test="ew.userId !=null and ew.userId !='' ">
+                and edu_orders.user_id = #{ew.userId}
+            </if>
+            <if test="ew.courseId !=null and ew.courseId !='' ">
+                and edu_trxorder_detail.course_id = #{ew.courseId}
+            </if>
+        </where>
+        group by edu_orders.id
+        order by edu_orders.id desc
+    </select>
+</mapper>

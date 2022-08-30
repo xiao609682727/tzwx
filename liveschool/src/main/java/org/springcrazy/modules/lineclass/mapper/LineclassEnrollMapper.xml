@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.springcrazy.modules.lineclass.mapper.LineclassEnrollMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="lineclassEnrollResultMap" type="org.springcrazy.modules.lineclass.entity.LineclassEnroll">
+        <id column="id" property="id"/>
+        <result column="user_id" property="userId"/>
+        <result column="trxorder_id" property="trxorderId"/>
+        <result column="user_name" property="userName"/>
+        <result column="mobile" property="mobile"/>
+        <result column="course_id" property="courseId"/>
+        <result column="create_time" property="createTime"/>
+        <result column="state" property="state"/>
+    </resultMap>
+
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="lineclassEnrollUser" type="org.springcrazy.modules.lineclass.vo.LineclassEnrollVO">
+        <id column="id" property="id"/>
+        <result column="user_id" property="userId"/>
+        <result column="trxorder_id" property="trxorderId"/>
+        <result column="user_name" property="userName"/>
+        <result column="mobile" property="mobile"/>
+        <result column="course_id" property="courseId"/>
+        <result column="create_time" property="createTime"/>
+        <result column="state" property="state"/>
+        <result column="auth_time" property="authTime"/>
+        <result column="pay_time" property="payTime"/>
+        <result column="show_name" property="showName"/>
+        <result column="course_name" property="courseName"/>
+
+    </resultMap>
+
+
+    <select id="selectLineclassEnrollPage" resultMap="lineclassEnrollResultMap">
+        select * from edu_lineclass_enroll where is_deleted = 0
+    </select>
+
+    <delete id="delectLineClassEnrol" >
+         DELETE FROM `edu_lineclass_enroll` WHERE user_id=#{userId} and course_id=#{courseId}
+    </delete>
+
+    <update id="updateLineClassEnrol" >
+         update `edu_lineclass_enroll` set state=2 ,trxorder_id=#{e.trxorderId}WHERE user_id=#{e.userId} and course_id=#{e.courseId}
+    </update>
+
+    <select id="getCourseUserList" resultMap="lineclassEnrollUser">
+        SELECT
+         edu_lineclass_enroll.id,
+         edu_lineclass_enroll.user_id,
+         edu_lineclass_enroll.trxorder_id,
+         edu_lineclass_enroll.user_name,
+         edu_lineclass_enroll.mobile,
+         edu_lineclass_enroll.course_id,
+         edu_lineclass_enroll.create_time,
+         edu_lineclass_enroll.state,
+         edu_trxorder_detail.auth_time,
+         edu_trxorder_detail.pay_time,
+         edu_student.show_name,
+         edu_course.course_name
+        FROM edu_lineclass_enroll
+        LEFT JOIN `edu_trxorder_detail`
+        ON edu_trxorder_detail.`trxorder_id`=edu_lineclass_enroll.`trxorder_id`
+        LEFT JOIN `edu_student`
+        ON edu_student.`id`=edu_lineclass_enroll.`user_id`
+        LEFT JOIN edu_course
+        ON edu_course.id=edu_lineclass_enroll.`course_id`
+        <where>
+            edu_lineclass_enroll.course_id=#{e.courseId}
+            <if test="e.mobile!=null and e.mobile!=''">
+                and  edu_lineclass_enroll.mobile like concat('%',#{e.mobile},'%')
+            </if>
+            <if test="e.userName!=null and e.userName!=''">
+                and  edu_lineclass_enroll.user_name like concat('%',#{e.userName},'%')
+            </if>
+            <if test="e.state>0 ">
+                and  edu_lineclass_enroll.state = #{e.state}
+            </if>
+        </where>
+    </select>
+
+
+    <select id="exportLineClass" resultType="org.springcrazy.modules.system.excel.ExportLineClassExcel">
+        SELECT
+        edu_lineclass_enroll.user_id,
+        edu_lineclass_enroll.user_name,
+        edu_lineclass_enroll.mobile,
+        edu_lineclass_enroll.create_time,
+        edu_lineclass_enroll.state,
+        edu_trxorder_detail.auth_time,
+        edu_trxorder_detail.pay_time,
+        edu_student.show_name,
+        edu_course.course_name,
+        edu_teacher.name
+        FROM edu_lineclass_enroll
+        LEFT JOIN `edu_trxorder_detail`
+        ON edu_trxorder_detail.`trxorder_id`=edu_lineclass_enroll.`trxorder_id`
+        LEFT JOIN `edu_student`
+        ON edu_student.`id`=edu_lineclass_enroll.`user_id`
+        LEFT JOIN edu_course
+        ON edu_course.id=edu_lineclass_enroll.`course_id`
+        LEFT JOIN `edu_teacher`
+        ON edu_teacher.id=edu_course.`teacher_id`
+        <where>
+            edu_lineclass_enroll.course_id=#{e.courseId}
+            <if test="e.mobile!=null and e.mobile!=''">
+                and  edu_lineclass_enroll.mobile like concat('%',#{e.mobile},'%')
+            </if>
+            <if test="e.userName!=null and e.userName!=''">
+                and  edu_lineclass_enroll.user_name like concat('%',#{e.userName},'%')
+            </if>
+            <if test="e.state>0 ">
+                and  edu_lineclass_enroll.state = #{e.state}
+            </if>
+        </where>
+    </select>
+
+</mapper>

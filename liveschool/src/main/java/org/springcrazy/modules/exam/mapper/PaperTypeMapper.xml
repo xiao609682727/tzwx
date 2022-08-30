@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.springcrazy.modules.exam.mapper.PaperTypeMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="paperTypeResultMap" type="org.springcrazy.modules.exam.entity.PaperType">
+        <id column="id" property="id"/>
+        <result column="title" property="title"/>
+        <result column="describtion" property="describtion"/>
+        <result column="buttonTitle" property="buttonTitle"/>
+        <result column="sort" property="sort"/>
+        <result column="addtime" property="addtime"/>
+        <result column="status" property="status"/>
+    </resultMap>
+
+
+    <select id="selectPaperTypePage" resultMap="paperTypeResultMap">
+        select * from exam_paper_type where is_deleted = 0
+    </select>
+
+</mapper>

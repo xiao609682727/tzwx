@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.springcrazy.modules.cms.mapper.WebsiteImagesMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="websiteImagesResultMap" type="org.springcrazy.modules.cms.entity.WebsiteImages">
+        <id column="id" property="id"/>
+        <result column="image_url" property="imageUrl"/>
+        <result column="link_address" property="linkAddress"/>
+        <result column="title" property="title"/>
+        <result column="type_id" property="typeId"/>
+        <result column="series_number" property="seriesNumber"/>
+        <result column="preview_url" property="previewUrl"/>
+        <result column="color" property="color"/>
+        <result column="describe" property="describe"/>
+    </resultMap>
+
+
+    <select id="selectWebsiteImagesPage" resultMap="websiteImagesResultMap">
+        select * from cms_website_images where is_deleted = 0
+    </select>
+
+</mapper>

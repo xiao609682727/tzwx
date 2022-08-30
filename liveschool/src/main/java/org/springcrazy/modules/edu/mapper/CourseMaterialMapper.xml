@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.springcrazy.modules.edu.mapper.CourseMaterialMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="courseMaterialResultMap" type="org.springcrazy.modules.edu.entity.CourseMaterial">
+        <id column="id" property="id"/>
+        <result column="course_id" property="courseId"/>
+        <result column="kpoint_id" property="kpointId"/>
+        <result column="name" property="name"/>
+        <result column="file_name" property="fileName"/>
+        <result column="file_url" property="fileUrl"/>
+        <result column=" sort" property="sort"/>
+        <result column="create_time" property="createTime"/>
+    </resultMap>
+
+
+    <select id="selectCourseMaterialPage" resultMap="courseMaterialResultMap">
+        select * from edu_course_material where is_deleted = 0
+    </select>
+
+    <select id="getMaterialsBykpointId" resultMap="courseMaterialResultMap">
+        select * from edu_course_material where kpoint_id = #{id}
+    </select>
+
+    <select id="getMaterialsByCourseId" resultMap="courseMaterialResultMap">
+        select * from edu_course_material where course_id = #{id}
+    </select>
+
+</mapper>

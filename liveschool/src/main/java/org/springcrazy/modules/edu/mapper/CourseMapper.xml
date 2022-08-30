@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.springcrazy.modules.edu.mapper.CourseMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="courseResultMap" type="org.springcrazy.modules.edu.entity.Course">
+        <id column="id" property="id"/>
+        <result column="course_name" property="courseName"/>
+        <result column="is_avaliable" property="isAvaliable"/>
+        <result column="subject_id" property="subjectId"/>
+        <result column="create_time" property="createTime"/>
+        <result column="source_price" property="sourcePrice"/>
+        <result column="current_price" property="currentPrice"/>
+        <result column="title" property="title"/>
+        <result column="context" property="context"/>
+        <result column="logo" property="logo"/>
+        <result column="update_time" property="updateTime"/>
+        <result column="page_buycount" property="pageBuycount"/>
+        <result column="bogusBuycount" property="bogusBuycount"/>
+        <result column="commentNum" property="commentNum"/>
+        <result column="page_viewcount" property="pageViewcount"/>
+        <result column="end_time" property="endTime"/>
+        <result column="losetype" property="losetype"/>
+        <result column="lose_time" property="loseTime"/>
+        <result column="sort" property="sort"/>
+        <result column="sell_type" property="sellType"/>
+        <result column="live_begin_time" property="liveBeginTime"/>
+        <result column="live_end_time" property="liveEndTime"/>
+        <result column="bogusViewcount" property="bogusViewcount"/>
+        <result column="teacher_id" property="teacherId"/>
+        <result column="face_teaching_time" property="faceTeachingTime"/>
+        <result column="face_teaching_subject" property="faceTeachingSubject"/>
+        <result column="face_teaching_address" property="faceTeachingAddress"/>
+        <result column="face_teaching_context" property="faceTeachingContext"/>
+        <result column="face_teaching_mobile" property="faceTeachingMobile"/>
+    </resultMap>
+
+
+    <select id="selectCoursePage" resultMap="courseResultMap">
+        select * from edu_course where is_deleted = 0
+    </select>
+
+    <select id="getCourseById" resultMap="courseResultMap">
+        select * from edu_course where id = #{courseId}
+    </select>
+
+</mapper>

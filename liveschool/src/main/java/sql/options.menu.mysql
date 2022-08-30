@@ -1,0 +1,11 @@
+INSERT INTO `crazy_menu`(`parent_id`, `code`, `name`, `alias`, `path`, `source`, `sort`, `category`, `action`, `is_open`, `remark`, `is_deleted`)
+VALUES (0, 'options', '', 'menu', '/exam/options', NULL, 1, 1, 0, 1, NULL, 0);
+set @parentid = (SELECT LAST_INSERT_ID());
+INSERT INTO `crazy_menu`(`parent_id`, `code`, `name`, `alias`, `path`, `source`, `sort`, `category`, `action`, `is_open`, `remark`, `is_deleted`)
+VALUES (@parentid, 'options_add', '新增', 'add', '/exam/options/add', 'plus', 1, 2, 1, 1, NULL, 0);
+INSERT INTO `crazy_menu`(`parent_id`, `code`, `name`, `alias`, `path`, `source`, `sort`, `category`, `action`, `is_open`, `remark`, `is_deleted`)
+VALUES (@parentid, 'options_edit', '修改', 'edit', '/exam/options/edit', 'form', 2, 2, 1, 2, NULL, 0);
+INSERT INTO `crazy_menu`(`parent_id`, `code`, `name`, `alias`, `path`, `source`, `sort`, `category`, `action`, `is_open`, `remark`, `is_deleted`)
+VALUES (@parentid, 'options_delete', '删除', 'delete', '/api/exam/options/remove', 'delete', 3, 2, 1, 3, NULL, 0);
+INSERT INTO `crazy_menu`(`parent_id`, `code`, `name`, `alias`, `path`, `source`, `sort`, `category`, `action`, `is_open`, `remark`, `is_deleted`)
+VALUES (@parentid, 'options_view', '查看', 'view', '/exam/options/view', 'file-text', 4, 2, 1, 2, NULL, 0);

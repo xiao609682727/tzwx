@@ -1,0 +1,190 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.springcrazy.modules.exam.mapper.ExampaperRecordMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="exampaperRecordResultMap" type="org.springcrazy.modules.exam.vo.ExampaperRecordVO">
+        <id column="id" property="id"/>
+        <result column="user_score" property="userScore"/>
+        <result column="accuracy" property="accuracy"/>
+        <result column="user_id" property="userId"/>
+        <result column="ep_id" property="epId"/>
+        <result column="add_time" property="addTime"/>
+        <result column="test_time" property="testTime"/>
+        <result column="qst_count" property="qstCount"/>
+        <result column="doneCount" property="doneCount"/>
+        <result column="correct_num" property="correctNum"/>
+        <result column="subject_id" property="subjectId"/>
+        <result column="type" property="type"/>
+        <result column="status" property="status"/>
+        <result column="paper_name" property="paperName"/>
+        <result column="update_time" property="updateTime"/>
+        <result column="read" property="read"/>
+    </resultMap>
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="exampaperRecordVOResultMap" type="org.springcrazy.modules.exam.vo.ExampaperRecordVO">
+        <id column="id" property="id"/>
+        <result column="user_score" property="userScore"/>
+        <result column="accuracy" property="accuracy"/>
+        <result column="user_id" property="userId"/>
+        <result column="ep_id" property="epId"/>
+        <result column="add_time" property="addTime"/>
+        <result column="test_time" property="testTime"/>
+        <result column="qst_count" property="qstCount"/>
+        <result column="doneCount" property="doneCount"/>
+        <result column="correct_num" property="correctNum"/>
+        <result column="subject_id" property="subjectId"/>
+        <result column="type" property="type"/>
+        <result column="status" property="status"/>
+        <result column="paper_name" property="paperName"/>
+        <result column="update_time" property="updateTime"/>
+        <result column="read_status" property="readStatus"/>
+        <result column="user_name" property="userName"/>
+        <result column="mobile" property="mobile"/>
+        <result column="email" property="email"/>
+        <result column="realName" property="realName"/>
+    </resultMap>
+    <resultMap id="ExportExampaperRecordExcelResult" type="org.springcrazy.modules.system.excel.ExportExampaperRecordExcel">
+        <id column="id" property="id"/>
+        <result column="user_score" property="userScore"/>
+        <result column="accuracy" property="accuracy"/>
+        <result column="add_time" property="addTime"/>
+        <result column="test_time" property="testTime"/>
+        <result column="qst_count" property="qstCount"/>
+        <result column="doneCount" property="doneCount"/>
+        <result column="status" property="status"/>
+        <result column="paper_name" property="paperName"/>
+        <result column="user_name" property="userName"/>
+        <result column="mobile" property="mobile"/>
+        <result column="email" property="email"/>
+        <result column="realName" property="realName"/>
+        <result column="subjectName" property="subject_name"/>
+    </resultMap>
+
+    <select id="selectExampaperRecordPage" resultMap="exampaperRecordVOResultMap">
+        select * from exam_exampaper_record left join edu_student  on exam_exampaper_record.user_id = edu_student.id
+        where edu_student.is_deleted = 0
+        <if test="exampaperRecord.id !=null and exampaperRecord.id !='' ">
+            and exam_exampaper_record.id = #{exampaperRecord.id}
+        </if>
+        <if test="exampaperRecord.realName !=null and exampaperRecord.realName !='' ">
+            and edu_student.realName like concat('%',#{exampaperRecord.realName},'%')
+        </if>
+        <if test="exampaperRecord.userName !=null and exampaperRecord.userName !='' ">
+            and edu_student.user_name like concat('%',#{exampaperRecord.userName},'%')
+        </if>
+        <if test="exampaperRecord.mobile !=null and exampaperRecord.mobile !='' ">
+            and edu_student.mobile like concat('%',#{exampaperRecord.mobile},'%')
+        </if>
+        <if test="exampaperRecord.email !=null and exampaperRecord.email !='' ">
+            and edu_student.email like concat('%',#{exampaperRecord.email},'%')
+        </if>
+        <if test="exampaperRecord.userId !=null and exampaperRecord.userId !='' ">
+            and exam_exampaper_record.user_id = #{exampaperRecord.userId}
+        </if>
+        <if test="exampaperRecord.epId !=null and exampaperRecord.epId !='' ">
+            and exam_exampaper_record.ep_id = #{exampaperRecord.epId}
+        </if>
+        <if test="exampaperRecord.subjectId !=null and exampaperRecord.subjectId !='' ">
+            and exam_exampaper_record.subject_id = #{exampaperRecord.subjectId}
+        </if>
+        <if test="exampaperRecord.paperName !=null and exampaperRecord.paperName !='' ">
+            and exam_exampaper_record.paper_name like concat('%',#{exampaperRecord.paperName},'%')
+        </if>
+        order by exam_exampaper_record.add_time desc
+    </select>
+
+    <select id="getExamPaper" resultMap="exampaperRecordResultMap">
+        select * from exam_exampaper_record
+        <where>
+            <if test="userId>0">
+              and user_id=#{userId}
+            </if>
+        </where>
+        order by add_time Desc
+        limit 1;
+    </select>
+
+    <select id="getExamPaperNums" resultType="java.lang.Integer">
+        SELECT
+        IFNULL(COUNT(*),0)
+        FROM exam_exampaper_record
+        <where>
+            user_id=#{userId}
+            AND subject_id = #{subjectId}
+        </where>
+    </select>
+
+    <select id="getQuestionNums" resultType="java.lang.Integer">
+        SELECT
+        IFNULL(SUM(qst_count),0)
+        FROM exam_exampaper_record
+        <where>
+            user_id=#{userId}
+            AND subject_id = #{subjectId}
+        </where>
+    </select>
+
+    <select id="getquestionErrorNums" resultType="java.lang.Integer">
+        SELECT
+        IFNULL(SUM(qst_count)-SUM(correct_num),0)
+        FROM exam_exampaper_record
+        <where>
+--             DATE_SUB(CURDATE(), INTERVAL 7 DAY) <![CDATA[ <= ]]> DATE(add_time)
+            user_id=#{userId}
+            AND subject_id = #{subjectId}
+        </where>
+    </select>
+
+    <select id="getQuesData" resultType="java.util.Map">
+        SELECT
+        count( exam_question_record.id ) AS count,
+        count( exam_question_record.STATUS = 1 OR NULL ) AS errorCount,
+        DATE_FORMAT( exam_question_record.addtime, '%Y-%m-%d' ) AS day,
+        exam_exampaper.subjectId
+        FROM
+        exam_question_record
+        LEFT JOIN exam_exampaper ON exam_question_record.paper_id = exam_exampaper.id
+        WHERE
+        DATE_SUB( CURDATE( ), INTERVAL 8 DAY ) <![CDATA[ <= ]]> DATE( exam_question_record.addtime )
+        AND exam_question_record.cus_id = #{cusId}
+        AND exam_exampaper.subjectId = #{subjectId}
+        GROUP BY DAY
+    </select>
+
+    <select id="exportExampaperRecord" resultMap="ExportExampaperRecordExcelResult">
+        select * from exam_exampaper_record
+        left join edu_student  on exam_exampaper_record.user_id = edu_student.id
+        left join edu_subject on exam_exampaper_record.subject_id = edu_subject.id
+        where edu_student.is_deleted = 0
+        <if test="exampaperRecord.id !=null and exampaperRecord.id !='' ">
+            and exam_exampaper_record.id = #{exampaperRecord.id}
+        </if>
+        <if test="exampaperRecord.realName !=null and exampaperRecord.realName !='' ">
+            and edu_student.realName like concat('%',#{exampaperRecord.realName},'%')
+        </if>
+        <if test="exampaperRecord.userName !=null and exampaperRecord.userName !='' ">
+            and edu_student.user_name like concat('%',#{exampaperRecord.userName},'%')
+        </if>
+        <if test="exampaperRecord.mobile !=null and exampaperRecord.mobile !='' ">
+            and edu_student.mobile like concat('%',#{exampaperRecord.mobile},'%')
+        </if>
+        <if test="exampaperRecord.email !=null and exampaperRecord.email !='' ">
+            and edu_student.email like concat('%',#{exampaperRecord.email},'%')
+        </if>
+        <if test="exampaperRecord.userId !=null and exampaperRecord.userId !='' ">
+            and exam_exampaper_record.user_id = #{exampaperRecord.userId}
+        </if>
+        <if test="exampaperRecord.epId !=null and exampaperRecord.epId !='' ">
+            and exam_exampaper_record.ep_id = #{exampaperRecord.epId}
+        </if>
+        <if test="exampaperRecord.subjectId !=null and exampaperRecord.subjectId !='' ">
+            and exam_exampaper_record.subject_id = #{exampaperRecord.subjectId}
+        </if>
+        <if test="exampaperRecord.paperName !=null and exampaperRecord.paperName !='' ">
+            and exam_exampaper_record.paper_name like concat('%',#{exampaperRecord.paperName},'%')
+        </if>
+        order by exam_exampaper_record.add_time desc
+    </select>
+</mapper>

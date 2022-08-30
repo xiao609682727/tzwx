@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.springcrazy.modules.coursecard.mapper.CardCourseMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="cardCourseResultMap" type="org.springcrazy.modules.coursecard.entity.CardCourse">
+        <id column="id" property="id"/>
+        <result column="card_id" property="cardId"/>
+        <result column="course_id" property="courseId"/>
+        <result column="type" property="type"/>
+    </resultMap>
+
+
+    <select id="selectCardCoursePage" resultMap="cardCourseResultMap">
+        select * from edu_card_course where is_deleted = 0
+    </select>
+    <select id="queryCourseCardCourseList" resultType="Map">
+        select
+        edu_card_course.course_id courseId,
+        edu_course.course_name courseName
+        from edu_card_course
+        left join edu_course
+        on edu_card_course.course_id = edu_course.id
+        where edu_card_course.card_id = #{cardId}
+    </select>
+</mapper>

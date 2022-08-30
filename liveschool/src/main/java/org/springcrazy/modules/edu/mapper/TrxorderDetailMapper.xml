@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.springcrazy.modules.edu.mapper.TrxorderDetailMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="trxorderDetailResultMap" type="org.springcrazy.modules.edu.vo.TrxorderDetailVO">
+        <id column="id" property="id"/>
+        <result column="user_id" property="userId"/>
+        <result column="course_id" property="courseId"/>
+        <result column="trxorder_id" property="trxorderId"/>
+        <result column="order_no" property="orderNo"/>
+        <result column="losetype" property="losetype"/>
+        <result column="lose_abs_time" property="loseAbsTime"/>
+        <result column="lose_time" property="loseTime"/>
+        <result column="begin_time" property="beginTime"/>
+        <result column="auth_time" property="authTime"/>
+        <result column="create_time" property="createTime"/>
+        <result column="pay_time" property="payTime"/>
+        <result column="source_price" property="sourcePrice"/>
+        <result column="coupon_price" property="couponPrice"/>
+        <result column="current_price" property="currentPrice"/>
+        <result column="course_name" property="courseName"/>
+        <result column="auth_status" property="authStatus"/>
+        <result column="description" property="description"/>
+        <result column="last_update_time" property="lastUpdateTime"/>
+        <result column="remind_status" property="remindStatus"/>
+        <result column="del_status" property="delStatus"/>
+        <result column="trxorder_type" property="trxorderType"/>
+        <result column="logo" property="logo"/>
+    </resultMap>
+
+
+    <select id="selectTrxorderDetailPage" resultMap="trxorderDetailResultMap">
+        select
+        edu_trxorder_detail.user_id ,
+        edu_trxorder_detail.course_id,
+        edu_trxorder_detail.trxorder_id,
+        edu_trxorder_detail.order_no,
+        edu_trxorder_detail.losetype,
+        edu_trxorder_detail.lose_abs_time,
+        edu_trxorder_detail.lose_time,
+        edu_trxorder_detail.begin_time,
+        MAX(edu_trxorder_detail.auth_time) as auth_time,
+        edu_trxorder_detail.create_time,
+        edu_trxorder_detail.pay_time,
+        edu_trxorder_detail.source_price,
+        edu_trxorder_detail.coupon_price,
+        edu_trxorder_detail.current_price,
+        edu_trxorder_detail.course_name,
+        edu_trxorder_detail.auth_status,
+        edu_trxorder_detail.description,
+        edu_trxorder_detail.last_update_time,
+        edu_trxorder_detail.remind_status,
+        edu_trxorder_detail.del_status,
+        edu_trxorder_detail.trxorder_type,
+        edu_course.logo,
+        edu_student.mobile mobile,
+        edu_student.user_name userName,
+        edu_student.show_name showName,
+        edu_student.realName
+        from edu_trxorder_detail
+        left join edu_student on edu_trxorder_detail.user_id = edu_student.id
+        left join edu_course on edu_trxorder_detail.course_id = edu_course.id
+        where edu_trxorder_detail.auth_time  <![CDATA[ >= ]]> now()
+
+        <if test="trxorderDetail.trxorderId != null ">
+            and edu_trxorder_detail.trxorder_id = #{trxorderDetail.trxorderId}
+        </if>
+        <if test="trxorderDetail.orderNo != null ">
+            and edu_trxorder_detail.order_no = #{trxorderDetail.orderNo}
+        </if>
+        <if test="trxorderDetail.courseId != null ">
+            and edu_trxorder_detail.course_id = #{trxorderDetail.courseId}
+        </if>
+        <if test="trxorderDetail.userId != null ">
+            and edu_trxorder_detail.user_id = #{trxorderDetail.userId}
+        </if>
+        <if test="trxorderDetail.authStatus != null and trxorderDetail.authStatus != ''">
+            and edu_trxorder_detail.auth_status = #{trxorderDetail.authStatus}
+        </if>
+        <if test="trxorderDetail.trxorderType != null and trxorderDetail.trxorderType != ''">
+            and edu_trxorder_detail.trxorder_type = #{trxorderDetail.trxorderType}
+        </if>
+        group by edu_trxorder_detail.course_id
+        order by edu_trxorder_detail.create_time desc
+    </select>
+
+
+    <select id="getTrxorderDetailEndPage" resultMap="trxorderDetailResultMap">
+        select
+        edu_trxorder_detail.user_id ,
+        edu_trxorder_detail.course_id,
+        edu_trxorder_detail.trxorder_id,
+        edu_trxorder_detail.order_no,
+        edu_trxorder_detail.losetype,
+        edu_trxorder_detail.lose_abs_time,
+        edu_trxorder_detail.lose_time,
+        edu_trxorder_detail.begin_time,
+        MAX(edu_trxorder_detail.auth_time) as auth_time,
+        edu_trxorder_detail.create_time,
+        edu_trxorder_detail.pay_time,
+        edu_trxorder_detail.source_price,
+        edu_trxorder_detail.coupon_price,
+        edu_trxorder_detail.current_price,
+        edu_trxorder_detail.course_name,
+        edu_trxorder_detail.auth_status,
+        edu_trxorder_detail.description,
+        edu_trxorder_detail.last_update_time,
+        edu_trxorder_detail.remind_status,
+        edu_trxorder_detail.del_status,
+        edu_trxorder_detail.trxorder_type,
+        edu_course.logo,
+        edu_student.mobile mobile,
+        edu_student.user_name userName,
+        edu_student.show_name showName,
+        edu_student.realName
+        from edu_trxorder_detail
+        left join edu_student on edu_trxorder_detail.user_id = edu_student.id
+        left join edu_course on edu_trxorder_detail.course_id = edu_course.id
+        where edu_trxorder_detail.auth_time  <![CDATA[ < ]]> now()
+        and edu_course.is_avaliable =1
+        and edu_course.is_deleted =0
+        <if test="trxorderDetail.trxorderId != null ">
+            and edu_trxorder_detail.trxorder_id = #{trxorderDetail.trxorderId}
+        </if>
+        <if test="trxorderDetail.orderNo != null ">
+            and edu_trxorder_detail.order_no = #{trxorderDetail.orderNo}
+        </if>
+        <if test="trxorderDetail.courseId != null ">
+            and edu_trxorder_detail.course_id = #{trxorderDetail.courseId}
+        </if>
+        <if test="trxorderDetail.userId != null ">
+            and edu_trxorder_detail.user_id = #{trxorderDetail.userId}
+        </if>
+        <if test="trxorderDetail.authStatus != null and trxorderDetail.authStatus != ''">
+            and edu_trxorder_detail.auth_status = #{trxorderDetail.authStatus}
+        </if>
+        <if test="trxorderDetail.trxorderType != null and trxorderDetail.trxorderType != ''">
+            and edu_trxorder_detail.trxorder_type = #{trxorderDetail.trxorderType}
+        </if>
+        group by edu_trxorder_detail.course_id
+        order by edu_trxorder_detail.create_time desc
+    </select>
+
+    <select id="selectTrxorderDetailList" resultMap="trxorderDetailResultMap">
+        select * from edu_trxorder_detail left join edu_course on edu_trxorder_detail.course_id = edu_course.id
+        where edu_course.is_avaliable = 1
+        and edu_trxorder_detail.trxorder_id IN
+        <foreach collection="list" item="id" index="index" open="(" close=")" separator=",">
+            #{id}
+        </foreach>
+        order by edu_trxorder_detail.create_time desc
+    </select>
+
+</mapper>

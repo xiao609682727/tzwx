@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.springcrazy.modules.msg.mapper.MsgReceiveMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="msgReceiveResultMap" type="org.springcrazy.modules.msg.entity.MsgReceive">
+        <id column="id" property="id"/>
+        <result column="create_time" property="createTime"/>
+        <result column="cus_id" property="cusId"/>
+        <result column="content" property="content"/>
+        <result column="type" property="type"/>
+        <result column="status" property="status"/>
+        <result column="receiving_cusid" property="receivingCusid"/>
+        <result column="showname" property="showname"/>
+        <result column="send_range" property="sendRange"/>
+        <result column="content_type" property="contentType"/>
+        <result column="content_id" property="contentId"/>
+    </resultMap>
+
+
+    <select id="selectMsgReceivePage" resultMap="msgReceiveResultMap">
+        select * from edu_msg_receive where is_deleted = 0
+    </select>
+
+</mapper>

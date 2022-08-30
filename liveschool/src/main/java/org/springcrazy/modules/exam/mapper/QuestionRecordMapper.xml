@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.springcrazy.modules.exam.mapper.QuestionRecordMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="questionRecordResultMap" type="org.springcrazy.modules.exam.entity.QuestionRecord">
+        <id column="id" property="id"/>
+        <result column="paper_id" property="paperId"/>
+        <result column="qst_id" property="qstId"/>
+        <result column="useranswer" property="useranswer"/>
+        <result column="status" property="status"/>
+        <result column="cus_id" property="cusId"/>
+        <result column="addtime" property="addtime"/>
+        <result column="paper_record_id" property="paperRecordId"/>
+        <result column="papermiddle_id" property="papermiddleId"/>
+        <result column="qst_type" property="qstType"/>
+        <result column="point_id" property="pointId"/>
+        <result column="score" property="score"/>
+        <result column="state" property="state"/>
+    </resultMap>
+
+
+    <select id="selectQuestionRecordPage" resultType="java.util.Map">
+        select exam_question_record.paper_id,exam_question_record.qst_id,exam_question.qst_content,count(exam_question_record.status =0 or null) as rightCount,count(exam_question_record.status) as count,exam_question_record.qst_type
+        from exam_question_record left join exam_question on exam_question_record.qst_id = exam_question.id
+        left join exam_qstmiddle on exam_question_record.qst_id = exam_qstmiddle.qstId
+        <where>
+            <if test="questionRecord.paperId != null">
+                exam_question_record.paper_id = #{questionRecord.paperId} and exam_qstmiddle.paperId = #{questionRecord.paperId}
+            </if>
+        </where>
+        group by exam_question_record.qst_id
+        order by exam_question_record.qst_type
+    </select>
+
+</mapper>

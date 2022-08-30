@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.springcrazy.modules.agent.mapper.AgentAccountMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="agentAccountResultMap" type="org.springcrazy.modules.agent.entity.AgentAccount">
+        <id column="id" property="id"/>
+        <result column="agent_user_id" property="agentUserId"/>
+        <result column="balance" property="balance"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_time" property="updateTime"/>
+    </resultMap>
+    <resultMap id="agentAccountVOResultMap" type="org.springcrazy.modules.agent.vo.AgentAccountVO" extends="agentAccountResultMap">
+
+    </resultMap>
+    <select id="selectAgentAccountPage" resultMap="agentAccountVOResultMap">
+        select
+        edu_agent_account.*,
+        crazy_user.account account,
+        crazy_user.name name,
+        crazy_user.real_name realName,
+        crazy_user.phone phone
+        from edu_agent_account
+        left join crazy_user  on edu_agent_account.agent_user_id = crazy_user.id
+        where crazy_user.is_deleted=0
+        <if test="agentAccount.account !=null and agentAccount.account !='' ">
+            and crazy_user.account like concat('%',#{agentAccount.account},'%')
+        </if>
+        <if test="agentAccount.name !=null and agentAccount.name !='' ">
+            and crazy_user.name like concat('%',#{agentAccount.name},'%')
+        </if>
+        <if test="agentAccount.realName !=null and agentAccount.realName !='' ">
+            and crazy_user.real_name like concat('%',#{agentAccount.realName},'%')
+        </if>
+        <if test="agentAccount.phone !=null and agentAccount.phone !='' ">
+            and crazy_user.phone like concat('%',#{agentAccount.phone},'%')
+        </if>
+
+        <if test="agentAccount.agentUserId !=null and agentAccount.agentUserId !='' ">
+            and edu_agent_account.agent_user_id = #{agentAccount.agentUserId}
+        </if>
+        order by edu_agent_account.id desc
+    </select>
+
+</mapper>

@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.springcrazy.modules.exam.mapper.QstmiddleMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="qstmiddleResultMap" type="org.springcrazy.modules.exam.entity.Qstmiddle">
+        <id column="id" property="id"/>
+        <result column="paperId" property="paperId"/>
+        <result column="qstId" property="qstId"/>
+        <result column="qstType" property="qstType"/>
+        <result column="addtime" property="addtime"/>
+        <result column="sort" property="sort"/>
+        <result column="papermiddleId" property="papermiddleId"/>
+        <result column="complexId" property="complexId"/>
+        <result column="paperRecordId" property="paperRecordId"/>
+    </resultMap>
+
+
+    <select id="selectQstmiddlePage" resultMap="qstmiddleResultMap">
+        select * from exam_qstmiddle where is_deleted = 0
+    </select>
+    <select id="selectQstmiddle" resultType="org.springcrazy.modules.exam.vo.QstmiddleVO">
+        select
+            exam_question.`qst_content` as qstContent,
+            exam_question.`isAsr`,
+            exam_question.`qstType`,
+            exam_question.`level`,
+            exam_question.`author`,
+            exam_question.`qst_analyze` as qstAnalyze,
+            exam_question.`update_time`,
+            exam_question.`subject_id` as subjectId,
+            exam_question.`status`,
+            exam_question.`point_id` as pointId,
+            exam_question.`complex_falg` as complexFalg,
+            exam_question.`time`,
+            exam_question.`right_time` as rightTime,
+            exam_question.`error_time` as errorTime,
+            exam_question.`accuracy`,
+            exam_question.`vacancyType`,
+            exam_question.`option_list` as optionList,
+            exam_qstmiddle.`id`,
+            exam_qstmiddle.`paperId`,
+            exam_qstmiddle.`qstId`,
+            exam_qstmiddle.`qstType`,
+            exam_qstmiddle.`addtime`,
+            exam_qstmiddle.`sort`,
+            exam_qstmiddle.`papermiddleId`,
+            exam_qstmiddle.`complexId`,
+            exam_qstmiddle.`paperRecordId`
+        from exam_qstmiddle left join exam_question on exam_qstmiddle.qstId = exam_question.id
+        where exam_qstmiddle.paperId = #{id} order by exam_qstmiddle.sort asc
+    </select>
+
+</mapper>

@@ -1,0 +1,104 @@
+#服务器配置
+server:
+  # 服务端口
+  port: 81
+  undertow:
+    # 设置IO线程数, 它主要执行非阻塞的任务,它们会负责多个连接, 默认设置每个CPU核心一个线程
+    io-threads: 16
+    # 阻塞任务线程池, 当执行类似servlet请求阻塞操作, undertow会从这个线程池中取得线程,它的值设置取决于系统的负载
+    worker-threads: 400
+    # 以下的配置会影响buffer,这些buffer会用于服务器连接的IO操作,有点类似netty的池化内存管理
+    buffer-size: 1024
+    # 是否分配的直接内存
+    direct-buffers: true
+  servlet:
+    encoding:
+      charset: UTF-8
+      enabled: true
+      force: true
+
+#spring配置
+spring:
+  cache:
+    ehcache:
+      config: classpath:config/ehcache.xml
+  servlet:
+    multipart:
+      max-file-size: 256MB
+      max-request-size: 1024MB
+  mvc:
+    throw-exception-if-no-handler-found: true
+  resources:
+    add-mappings: false
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  quartz:
+    # 参见 org.springframework.boot.autoconfigure.quartz.QuartzProperties
+    job-store-type: jdbc
+    wait-for-jobs-to-complete-on-shutdown: true
+    scheduler-name: SpringCrazyScheduler
+    properties:
+      org.quartz.scheduler.instanceName: SpringBootDemoScheduler
+      org.quartz.scheduler.instanceId: auto
+      org.quartz.threadPool.threadCount: 5
+      org.quartz.threadPool.threadPriority: 5
+      org.quartz.threadPool.threadsInheritContextClassLoaderOfInitializingThread: true
+      org.quartz.jobStore.misfireThreshold: 5000
+      org.quartz.jobStore.class: org.springframework.scheduling.quartz.LocalDataSourceJobStore
+      org.quartz.jobStore.driverDelegateClass: org.quartz.impl.jdbcjobstore.StdJDBCDelegate
+      # 在调度流程的第一步，也就是拉取待即将触发的triggers时，是上锁的状态，即不会同时存在多个线程拉取到相同的trigger的情况，也就避免的重复调度的危险。参考：https://segmentfault.com/a/1190000015492260
+      org.quartz.jobStore.acquireTriggersWithinLock: true
+      #存储方式使用JobStoreTX，也就是数据库
+      org.quartz.jobStore.isClustered: true
+
+#配置日志地址
+logging:
+  config: classpath:log/logback_prod.xml
+
+# mybatis
+mybatis-plus:
+  mapper-locations: classpath:org/springcrazy/**/mapper/*Mapper.xml
+  #实体扫描，多个package用逗号或者分号分隔
+  typeAliasesPackage: org.springcrazy.**.entity
+  #typeEnumsPackage: org.springcrazy.dashboard.entity.enums
+  global-config:
+    # 关闭MP3.0自带的banner
+    banner: false
+    db-config:
+      #主键类型  0:"数据库ID自增", 1:"不操作", 2:"用户输入ID",3:"数字型snowflake", 4:"全局唯一ID UUID", 5:"字符串型snowflake";
+      id-type: id_worker
+      #字段策略
+      insert-strategy: not_null
+      update-strategy: not_null
+      select-strategy: not_null
+      #驼峰下划线转换
+      table-underline: true
+      # 逻辑删除配置
+      # 逻辑删除全局值（1表示已删除，这也是Mybatis Plus的默认配置）
+      logic-delete-value: 1
+      # 逻辑未删除全局值（0表示未删除，这也是Mybatis Plus的默认配置）
+      logic-not-delete-value: 0
+  configuration:
+    map-underscore-to-camel-case: true
+    cache-enabled: false
+
+#swagger配置信息
+swagger:
+  title: 同舟网校系统接口文档系统
+  description: 同舟网校系统接口文档系统
+  version: 1.0.0
+  license: Powered By tongzhou
+  licenseUrl: https://www.tongzhoushidai.com/
+  terms-of-service-url: https://www.tongzhoushidai.com/
+  contact:
+    name: tongzhou
+    email: tongzhou0304@163.com
+
+
+#TongZhou配置
+crazy:
+  xss:
+    enable: true
+  secure:
+    skip-url:
+      - /front/**

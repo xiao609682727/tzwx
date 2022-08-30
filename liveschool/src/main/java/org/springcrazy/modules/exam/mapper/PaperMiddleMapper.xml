@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.springcrazy.modules.exam.mapper.PaperMiddleMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="paperMiddleResultMap" type="org.springcrazy.modules.exam.entity.PaperMiddle">
+        <id column="id" property="id"/>
+        <result column="paperId" property="paperId"/>
+        <result column="type" property="type"/>
+        <result column="name" property="name"/>
+        <result column="num" property="num"/>
+        <result column="score" property="score"/>
+        <result column="title" property="title"/>
+        <result column="sort" property="sort"/>
+        <result column="qstLevel" property="qstLevel"/>
+        <result column="subjectId" property="subjectId"/>
+        <result column="pointId" property="pointId"/>
+        <result column="lose" property="lose"/>
+        <result column="loseScore" property="loseScore"/>
+    </resultMap>
+
+
+    <select id="selectPaperMiddlePage" resultMap="paperMiddleResultMap">
+        select * from exam_paper_middle where is_deleted = 0
+    </select>
+
+</mapper>

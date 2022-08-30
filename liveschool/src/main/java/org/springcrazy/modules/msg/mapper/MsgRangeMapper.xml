@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.springcrazy.modules.msg.mapper.MsgRangeMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="msgRangeResultMap" type="org.springcrazy.modules.msg.entity.MsgRange">
+        <id column="id" property="id"/>
+        <result column="msg_id" property="msgId"/>
+        <result column="range_id" property="rangeId"/>
+        <result column="type" property="type"/>
+        <result column="msg_type" property="msgType"/>
+    </resultMap>
+
+
+    <select id="selectMsgRangePage" resultMap="msgRangeResultMap">
+        select * from edu_msg_range where is_deleted = 0
+    </select>
+
+</mapper>

@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.springcrazy.modules.edu.mapper.CourseFavoritesMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="courseFavoritesResultMap" type="org.springcrazy.modules.edu.entity.CourseFavorites">
+        <id column="id" property="id"/>
+        <result column="course_name" property="courseName"/>
+        <result column="course_id" property="courseId"/>
+        <result column="user_id" property="userId"/>
+        <result column="create_time" property="createTime"/>
+        <result column="type" property="type"/>
+    </resultMap>
+    <resultMap id="courseFavoritesVOResultMap" type="org.springcrazy.modules.edu.vo.CourseFavoritesVO">
+        <id column="id" property="id"/>
+        <result column="course_name" property="courseName"/>
+        <result column="course_id" property="courseId"/>
+        <result column="user_id" property="userId"/>
+        <result column="create_time" property="createTime"/>
+        <result column="type" property="type"/>
+    </resultMap>
+    <select id="selectCourseFavoritesPage" resultMap="courseFavoritesVOResultMap">
+        select
+        edu_course_favorites.id,
+        edu_course_favorites.course_id,
+        edu_course_favorites.user_id,
+        edu_course_favorites.create_time,
+        edu_course_favorites.type,
+        edu_course.course_name,
+        edu_course.title,
+        edu_course.current_price currentPrice,
+        edu_course.sell_type sellType,
+        edu_course.logo
+
+        from edu_course
+        left join edu_course_favorites
+        on edu_course_favorites.course_id = edu_course.id
+        where
+        edu_course_favorites.user_id = #{courseFavorites.userId}
+        <if test="courseFavorites.type!=null and courseFavorites.type!=''">
+            AND edu_course.sell_type=#{courseFavorites.type}
+        </if>
+        order by edu_course_favorites.id desc
+    </select>
+
+</mapper>

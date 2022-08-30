@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.springcrazy.modules.exam.mapper.ErrorQuestionMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="errorQuestionResultMap" type="org.springcrazy.modules.exam.vo.ErrorQuestionVO">
+        <id column="id" property="id"/>
+        <result column="user_id" property="userId"/>
+        <result column="paper_id" property="paperId"/>
+        <result column="qst_id" property="qstId"/>
+        <result column="addtime" property="addtime"/>
+        <result column="paper_record_id" property="paperRecordId"/>
+        <result column="qst_content" property="qstContent"/>
+        <result column="isAsr" property="isAsr"/>
+        <result column="qstType" property="qstType"/>
+        <result column="option_list" property="optionList"/>
+        <result column="qst_analyze" property="qstAnalyze"/>
+        <result column="count" property="count"/>
+        <result column="error_count" property="errorCount"/>
+    </resultMap>
+
+
+    <select id="selectErrorQuestionPage" resultMap="errorQuestionResultMap">
+        select
+        exam_error_question.`id`, exam_error_question.`user_id`, exam_error_question.`paper_id`,exam_error_question.`count`,exam_error_question.`error_count`, exam_error_question.`qst_id`, exam_error_question.`addtime`, exam_error_question.`paper_record_id`,
+        exam_question.`qst_content`, exam_question.`isAsr`, exam_question.`qstType`,exam_question.`option_list`,exam_question.`qst_analyze`
+        from exam_error_question left join exam_question on exam_error_question.qst_id = exam_question.id where 1=1
+        <if test="ew.userId != null and ew.userId > 0">
+            and exam_error_question.user_id = #{ew.userId}
+        </if>
+        order by exam_error_question.addtime desc,exam_error_question.id desc
+    </select>
+    <select id="selectErrorQuestionList" resultMap="errorQuestionResultMap">
+        select
+        exam_error_question.`id`, exam_error_question.`user_id`, exam_error_question.`paper_id`, exam_error_question.`qst_id`, exam_error_question.`addtime`, exam_error_question.`paper_record_id`,
+        exam_question.`qst_content`, exam_question.`isAsr`, exam_question.`qstType`,exam_question.`option_list`,exam_question.`qst_analyze`
+        from exam_error_question left join exam_question on exam_error_question.qst_id = exam_question.id where 1=1
+        <if test="userId != null and userId > 0">
+            and exam_error_question.user_id = #{userId}
+        </if>
+        order by exam_error_question.addtime desc,exam_error_question.id desc
+    </select>
+
+</mapper>

@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.springcrazy.modules.web.mapper.WebsiteRecommendDetailMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="websiteRecommendDetailResultMap" type="org.springcrazy.modules.web.vo.WebsiteRecommendDetailVO">
+        <id column="id" property="id"/>
+        <result column="recommend_id" property="recommendId"/>
+        <result column="bus_id" property="busId"/>
+        <result column="sort" property="sort"/>
+
+        <result column="course_name" property="courseName"/>
+        <result column="sell_type" property="sellType"/>
+        <result column="source_price" property="sourcePrice"/>
+        <result column="current_price" property="currentPrice"/>
+        <result column="logo" property="logo"/>
+        <result column="page_viewcount" property="pageViewcount"/>
+        <result column="page_buycount" property="pageBuycount"/>
+        <result column="bogusViewcount" property="bogusViewcount"/>
+        <result column="bogusBuycount" property="bogusBuycount"/>
+    </resultMap>
+
+
+    <select id="selectWebsiteRecommendDetailPage" resultMap="websiteRecommendDetailResultMap">
+        select * from web_website_recommend_detail
+        left join edu_course on web_website_recommend_detail.bus_id = edu_course.id
+        where edu_course.is_avaliable = 1
+        <if test="recommendDetail.recommendId !=null and recommendDetail.recommendId !='' ">
+            and web_website_recommend_detail.recommend_id = #{recommendDetail.recommendId}
+        </if>
+        <if test="recommendDetail.courseName !=null and recommendDetail.courseName !='' ">
+            and edu_course.course_name like concat('%',#{recommendDetail.courseName},'%')
+        </if>
+        order by web_website_recommend_detail.sort desc,web_website_recommend_detail.id desc
+    </select>
+
+    <select id="selectWebsiteRecommendDetailList" resultMap="websiteRecommendDetailResultMap">
+        select * from web_website_recommend_detail left join edu_course on web_website_recommend_detail.bus_id = edu_course.id where edu_course.is_avaliable = 1
+        <if test="recommendId !=null and recommendId !='' ">
+            and web_website_recommend_detail.recommend_id = #{recommendId}
+        </if>
+        <if test="courseName !=null and courseName !='' ">
+            and edu_course.course_name = #{courseName}
+        </if>
+        order by web_website_recommend_detail.sort desc,web_website_recommend_detail.id desc
+    </select>
+
+</mapper>

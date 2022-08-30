@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.springcrazy.modules.cms.mapper.CommentMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="commentResultMap" type="org.springcrazy.modules.cms.entity.Comment">
+        <id column="id" property="id"/>
+        <result column="user_id" property="userId"/>
+        <result column="parent_id" property="parentId"/>
+        <result column="content" property="content"/>
+        <result column="addtime" property="addtime"/>
+        <result column="other_id" property="otherId"/>
+        <result column="praise_count" property="praiseCount"/>
+        <result column="reply_count" property="replyCount"/>
+        <result column="type" property="type"/>
+        <result column="roleType" property="roleType"/>
+        <result column="commentScore" property="commentScore"/>
+        <result column="commentSort" property="commentSort"/>
+        <result column="commentTop" property="commentTop"/>
+    </resultMap>
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="commentVOResultMap" type="org.springcrazy.modules.cms.vo.CommentVO">
+        <id column="id" property="id"/>
+        <result column="user_id" property="userId"/>
+        <result column="parent_id" property="parentId"/>
+        <result column="content" property="content"/>
+        <result column="addtime" property="addtime"/>
+        <result column="other_id" property="otherId"/>
+        <result column="praise_count" property="praiseCount"/>
+        <result column="reply_count" property="replyCount"/>
+        <result column="type" property="type"/>
+        <result column="roleType" property="roleType"/>
+        <result column="commentScore" property="commentScore"/>
+        <result column="commentSort" property="commentSort"/>
+        <result column="commentTop" property="commentTop"/>
+        <result column="head_img" property="headImg"/>
+        <result column="show_name" property="showName"/>
+        <result column="email" property="email"/>
+        <result column="mobile" property="mobile"/>
+    </resultMap>
+
+    <select id="selectCommentPage" resultMap="commentVOResultMap">
+        select cms_comment.id, cms_comment.user_id, cms_comment.parent_id, cms_comment.content, cms_comment.addtime, cms_comment.other_id, cms_comment.praise_count, cms_comment.reply_count
+        , cms_comment.type, cms_comment.roleType, cms_comment.commentScore, cms_comment.commentSort, cms_comment.commentTop, edu_student.show_name,edu_student.head_img,edu_student.mobile,
+        edu_student.email
+         from cms_comment left join edu_student on cms_comment.user_id = edu_student.id where 1=1
+        <if test="comment.email != null and comment.email != ''">
+            and edu_student.email like  concat('%',#{comment.email},'%')
+        </if>
+        <if test="comment.mobile != null and comment.mobile != ''">
+            and edu_student.mobile like  concat('%',#{comment.mobile},'%')
+        </if>
+        <if test="comment.showName != null and comment.showName != ''">
+            and edu_student.show_name like  concat('%',#{comment.showName},'%')
+        </if>
+        <if test="comment.userId != null and comment.userId != ''">
+            and cms_comment.user_id = #{comment.userId}
+        </if>
+        <if test="comment.otherId != null and comment.otherId != ''">
+            and cms_comment.other_id = #{comment.otherId}
+        </if>
+        <if test="comment.type != null and comment.type != ''">
+            and cms_comment.type = #{comment.type}
+        </if>
+        <if test="comment.parentId != null">
+            and cms_comment.parent_id = #{comment.parentId}
+        </if>
+        order by addtime desc
+    </select>
+
+</mapper>

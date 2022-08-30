@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.springcrazy.modules.msg.mapper.MsgEmailMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="msgEmailResultMap" type="org.springcrazy.modules.msg.entity.MsgEmail">
+        <id column="id" property="id"/>
+        <result column="create_user" property="createUser"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_user" property="updateUser"/>
+        <result column="update_time" property="updateTime"/>
+        <result column="status" property="status"/>
+        <result column="is_deleted" property="isDeleted"/>
+        <result column="email" property="email"/>
+        <result column="title" property="title"/>
+        <result column="content" property="content"/>
+        <result column="type" property="type"/>
+        <result column="send_range" property="sendRange"/>
+        <result column="ids" property="ids"/>
+    </resultMap>
+
+
+    <select id="selectMsgEmailPage" resultMap="msgEmailResultMap">
+        select * from edu_msg_email where is_deleted = 0
+    </select>
+
+</mapper>

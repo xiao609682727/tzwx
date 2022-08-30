@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.springcrazy.modules.edu.mapper.CourseKpointMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="courseKpointResultMap" type="org.springcrazy.modules.edu.entity.CourseKpoint">
+        <id column="id" property="id"/>
+        <result column="course_id" property="courseId"/>
+        <result column="name" property="name"/>
+        <result column="parent_id" property="parentId"/>
+        <result column="create_time" property="createTime"/>
+        <result column="sort" property="sort"/>
+        <result column="play_count" property="playCount"/>
+        <result column="is_free" property="isFree"/>
+        <result column="video_url" property="videoUrl"/>
+        <result column="replayUrl" property="replayUrl"/>
+        <result column="teacher_id" property="teacherId"/>
+        <result column="play_time" property="playTime"/>
+        <result column="kpoint_type" property="kpointType"/>
+        <result column="video_type" property="videoType"/>
+        <result column="file_type" property="fileType"/>
+        <result column="content" property="content"/>
+        <result column="page_count" property="pageCount"/>
+        <result column="live_begin_time" property="liveBeginTime"/>
+        <result column="live_end_time" property="liveEndTime"/>
+        <result column="intoLiveRoom" property="intoLiveRoom"/>
+        <result column="supplier" property="supplier"/>
+        <result column="openType" property="openType"/>
+        <result column="autoReplay" property="autoReplay"/>
+        <result column="videoTime" property="videoTime"/>
+    </resultMap>
+
+    <resultMap id="treeNodeResultMap" type="org.springcrazy.core.tool.node.TreeNode">
+        <id column="id" property="id"/>
+        <result column="parent_id" property="parentId"/>
+        <result column="title" property="title"/>
+        <result column="value" property="value"/>
+        <result column="key" property="key"/>
+    </resultMap>
+
+    <select id="selectCourseKpointPage" resultMap="courseKpointResultMap">
+        select * from edu_course_kpoint where is_deleted = 0
+    </select>
+
+    <select id="tree" resultMap="treeNodeResultMap">
+        select id, parent_id, name as title, id as 'value', id as 'key' from edu_course_kpoint
+    </select>
+
+    <select id="selectLiveCourseKpointOrderByBeginTime" resultMap="courseKpointResultMap">
+        select * from edu_course_kpoint
+        where course_id = #{courseId}
+        AND (live_begin_time > NOW() or <![CDATA[( live_begin_time < NOW() and live_end_time > NOW() ))]]>
+        ORDER BY live_begin_time ASC
+        limit 1
+    </select>
+    <select id="selectCourseKpointListForStudyRecord" resultMap="courseKpointResultMap">
+        select * from edu_course_kpoint
+        where course_id = #{courseId}
+        AND (live_begin_time > NOW() or <![CDATA[( live_begin_time < NOW() and live_end_time > NOW() ))]]>
+        ORDER BY live_begin_time ASC
+        limit 1
+    </select>
+
+</mapper>

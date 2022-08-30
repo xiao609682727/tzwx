@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.springcrazy.modules.cms.mapper.ArticleMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="articleResultMap" type="org.springcrazy.modules.cms.entity.Article">
+        <id column="id" property="id"/>
+        <result column="create_time" property="createTime"/>
+        <result column="title" property="title"/>
+        <result column="summary" property="summary"/>
+        <result column="image_url" property="imageUrl"/>
+        <result column="publish_time" property="publishTime"/>
+        <result column="click_num" property="clickNum"/>
+        <result column="praise_count" property="praiseCount"/>
+        <result column="type" property="type"/>
+        <result column="subject_id" property="subjectId"/>
+        <result column="comment_num" property="commentNum"/>
+        <result column="sort" property="sort"/>
+    </resultMap>
+
+
+    <select id="selectArticlePage" resultMap="articleResultMap">
+        select * from cms_article where is_deleted = 0
+    </select>
+
+</mapper>

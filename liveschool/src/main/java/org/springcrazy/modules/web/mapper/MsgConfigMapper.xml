@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.springcrazy.modules.web.mapper.MsgConfigMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="msgConfigResultMap" type="org.springcrazy.modules.web.entity.MsgConfig">
+        <id column="id" property="id"/>
+        <result column="code" property="code"/>
+        <result column="name" property="name"/>
+        <result column="msg_type" property="msgType"/>
+        <result column="content" property="content"/>
+        <result column="sms_sign" property="smsSign"/>
+        <result column="sms_template" property="smsTemplate"/>
+    </resultMap>
+
+
+    <select id="selectMsgConfigPage" resultMap="msgConfigResultMap">
+        select * from web_msg_config where is_deleted = 0
+    </select>
+
+</mapper>

@@ -1,0 +1,104 @@
+.theme-hey{
+  .avue-sidebar{
+    background-color: #fff;
+    box-shadow: 0 1px 4px rgba(0,21,41,.08);
+    .el-menu-item,.el-submenu__title{
+      i,span{
+        color: rgba(49,58,70,.8);
+      }
+      &:hover{
+          background: transparent;
+          i,span{
+             color:#409eff;
+          }
+      }
+      &.is-active {
+          &:before {
+            left:auto;
+            right: 0 ;
+          }
+          background-color: #f0f6ff;
+          i,span{
+              color:#409eff;
+          }
+      }
+  }
+  }
+  .avue-logo{
+    background-color: #fff;
+    box-shadow: none;
+    .avue-logo_title{
+      color:#409eff;
+      font-size: 20px;
+    }
+  }
+  .avue-tags{
+    background: #f3f6f8;
+    .el-tabs__item{
+      color: rgba(0,0,0,.65) !important;
+    }
+    .is-active{
+      background-color: #fff;
+      border-bottom: none !important;
+    }
+  }
+  .el-menu--popup{
+    .menu-wrapper{
+      .el-submenu{
+        span{
+          color:rgba(49, 58, 70, 0.8);
+        }
+      }
+      background-color: #fff;
+      i,span{
+        color:rgba(49, 58, 70, 0.8);
+      }
+      &:hover{
+        i,span{
+          color:#409eff;
+        }
+      }
+      &.is-active {
+        background-color: #f0f6ff;
+        &:before {
+          content: '';
+          top: 0;
+          left: 0;
+          bottom: 0;
+          width: 4px;
+          background: #000;
+          position: absolute;
+        }
+        i,span{
+          color:#409eff;
+        }
+      }
+    }
+    .el-menu-item{
+      background-color: #fff;
+      i,span{
+        color:rgba(49, 58, 70, 0.8);
+      }
+      &:hover{
+        i,span{
+          color:#409eff;
+        }
+      }
+      &.is-active {
+        background-color: #f0f6ff;
+        &:before {
+          content: '';
+          top: 0;
+          left: 0;
+          bottom: 0;
+          width: 4px;
+          background: #000;
+          position: absolute;
+        }
+        i,span{
+          color:#409eff;
+        }
+      }
+    }
+  }
+}

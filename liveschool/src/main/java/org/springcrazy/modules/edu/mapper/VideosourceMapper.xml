@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.springcrazy.modules.edu.mapper.VideosourceMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="videosourceResultMap" type="org.springcrazy.modules.edu.entity.Videosource">
+        <id column="id" property="id"/>
+        <result column="create_user" property="createUser"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_user" property="updateUser"/>
+        <result column="update_time" property="updateTime"/>
+        <result column="status" property="status"/>
+        <result column="is_deleted" property="isDeleted"/>
+        <result column="name" property="name"/>
+        <result column="video_size" property="videoSize"/>
+        <result column="video_status" property="videoStatus"/>
+        <result column="video_length" property="videoLength"/>
+        <result column="id_varchar" property="idVarchar"/>
+        <result column="video_duration" property="videoDuration"/>
+        <result column="image_url" property="imageUrl"/>
+        <result column="file_type" property="fileType"/>
+        <result column="init_type" property="initType"/>
+        <result column="video_type" property="videoType"/>
+    </resultMap>
+
+
+    <select id="selectVideosourcePage" resultMap="videosourceResultMap">
+        select * from edu_videosource where is_deleted = 0 order by create_time desc
+    </select>
+
+</mapper>

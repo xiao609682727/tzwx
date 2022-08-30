@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.springcrazy.modules.edu.mapper.LivePlaybackMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="livePlaybackResultMap" type="org.springcrazy.modules.edu.entity.LivePlayback">
+        <id column="id" property="id"/>
+        <result column="live_room_id" property="liveRoomId"/>
+        <result column="name" property="name"/>
+        <result column="video_id" property="videoId"/>
+        <result column="video_duration" property="videoDuration"/>
+        <result column="preface_url" property="prefaceUrl"/>
+        <result column="total_size" property="totalSize"/>
+        <result column="status" property="status"/>
+        <result column="default_status" property="defaultStatus"/>
+        <result column="create_time" property="createTime"/>
+    </resultMap>
+
+
+    <select id="selectLivePlaybackPage" resultMap="livePlaybackResultMap">
+        select * from edu_live_playback where is_deleted = 0
+    </select>
+
+</mapper>

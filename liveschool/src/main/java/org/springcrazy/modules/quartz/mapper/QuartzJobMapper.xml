@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.springcrazy.modules.quartz.mapper.QuartzJobMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="quartzJobResultMap" type="org.springcrazy.modules.quartz.entity.QuartzJob">
+        <id column="id" property="id"/>
+        <result column="create_user" property="createUser"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_user" property="updateUser"/>
+        <result column="update_time" property="updateTime"/>
+        <result column="status" property="status"/>
+        <result column="is_deleted" property="isDeleted"/>
+        <result column="bean_name" property="beanName"/>
+        <result column="cron_expression" property="cronExpression"/>
+        <result column="is_pause" property="isPause"/>
+        <result column="job_name" property="jobName"/>
+        <result column="method_name" property="methodName"/>
+        <result column="params" property="params"/>
+        <result column="description" property="description"/>
+        <result column="person_in_charge" property="personInCharge"/>
+        <result column="email" property="email"/>
+        <result column="sub_task" property="subTask"/>
+        <result column="pause_after_failure" property="pauseAfterFailure"/>
+    </resultMap>
+
+
+    <select id="selectQuartzJobPage" resultMap="quartzJobResultMap">
+        select * from crazy_quartz_job where is_deleted = 0
+    </select>
+
+</mapper>

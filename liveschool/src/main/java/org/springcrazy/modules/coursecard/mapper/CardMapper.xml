@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.springcrazy.modules.coursecard.mapper.CardMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="cardResultMap" type="org.springcrazy.modules.coursecard.entity.Card">
+        <id column="id" property="id"/>
+        <result column="name" property="name"/>
+        <result column="money" property="money"/>
+        <result column="type" property="type"/>
+        <result column="num" property="num"/>
+        <result column="begin_time" property="beginTime"/>
+        <result column="end_time" property="endTime"/>
+        <result column="remark" property="remark"/>
+        <result column="create_user" property="createUser"/>
+        <result column="create_time" property="createTime"/>
+        <result column="status" property="status"/>
+    </resultMap>
+
+
+    <select id="selectCardPage" resultMap="cardResultMap">
+        select * from edu_card where is_deleted = 0
+    </select>
+
+</mapper>

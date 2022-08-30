@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.springcrazy.modules.web.mapper.WebsiteRecommendCategoryMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="websiteRecommendCategoryResultMap" type="org.springcrazy.modules.web.vo.WebsiteRecommendCategoryVO">
+        <id column="id" property="id"/>
+        <result column="name" property="name"/>
+        <result column="link" property="link"/>
+        <result column="description" property="description"/>
+        <result column="coursenum" property="coursenum"/>
+        <result column="type" property="type"/>
+        <result column="frontType" property="frontType"/>
+    </resultMap>
+
+
+    <select id="selectWebsiteRecommendCategoryPage" resultMap="websiteRecommendCategoryResultMap">
+        select * from web_website_recommend_category where is_deleted = 0
+    </select>
+
+    <select id="selectWebsiteRecommendCategoryList" resultMap="websiteRecommendCategoryResultMap">
+        select * from web_website_recommend_category
+        <where>
+            <if test="frontType != null">
+                and front_type = #{frontType}
+            </if>
+        </where>
+    </select>
+
+</mapper>

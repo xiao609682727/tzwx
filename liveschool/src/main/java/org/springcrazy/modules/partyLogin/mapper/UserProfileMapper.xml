@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.springcrazy.modules.partyLogin.mapper.UserProfileMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="userProfileResultMap" type="org.springcrazy.modules.partyLogin.entity.UserProfile">
+        <id column="id" property="id"/>
+        <result column="name" property="name"/>
+        <result column="openid" property="openid"/>
+        <result column="unionid" property="unionid"/>
+        <result column="profiletype" property="profiletype"/>
+        <result column="userid" property="userid"/>
+        <result column="profiledate" property="profiledate"/>
+    </resultMap>
+
+
+    <select id="selectUserProfilePage" resultMap="userProfileResultMap">
+        select * from edu_user_profile where
+    </select>
+
+    <select id="getStudetByOpintId" resultMap="userProfileResultMap">
+        select * from edu_user_profile
+        <where>
+            <if test="e.openid!='' and e.openid!=null">
+              and edu_user_profile.openid=#{e.openid}
+            </if>
+            <if test="e.unionid!='' and e.unionid!=null">
+                and edu_user_profile.unionid=#{e.unionid}
+            </if>
+            <if test="e.profiletype!='' and e.profiletype!=null">
+                and edu_user_profile.profiletype=#{e.profiletype}
+            </if>
+        </where>
+    </select>
+
+    <select id="getStudetThreeLise" resultMap="userProfileResultMap">
+        select * from edu_user_profile where edu_user_profile.userid=#{e.userid} order by id DESC
+
+    </select>
+
+    <delete id="delectUserProfile" >
+        delete  from edu_user_profile where edu_user_profile.userid = #{e.userid}
+
+    </delete>
+
+    <select id="getStudetWxLise" resultMap="userProfileResultMap">
+        select * from edu_user_profile where edu_user_profile.userid=#{e.userid}
+        and (edu_user_profile.profiletype='wxPC' or edu_user_profile.profiletype='wxH5' or edu_user_profile.profiletype='wxApp' )
+    </select>
+
+    <select id="getStudetQqLise" resultMap="userProfileResultMap">
+        select * from edu_user_profile where edu_user_profile.userid=#{e.userid}
+        and (edu_user_profile.profiletype='qqPC' or edu_user_profile.profiletype='qqApp')
+    </select>
+
+    <select id="getStudetWeiboLise" resultMap="userProfileResultMap">
+        select * from edu_user_profile where edu_user_profile.userid=#{e.userid}
+        and edu_user_profile.profiletype='weibo'
+    </select>
+
+</mapper>

@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="renderer" content="webkit">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <title></title>
+    <meta name="description" content="">
+    <meta name="keywords" content="">
+    <meta name="author" content="">
+    <link rel="stylesheet" href="<%= BASE_URL %>static/css/moco.min.css"/>
+    <link rel="stylesheet" href="<%= BASE_URL %>static/css/base.css"/>
+    <link rel="stylesheet" href="<%= BASE_URL %>static/css/common/pic-viewer-less.css"/>
+    <link rel="stylesheet" href="<%= BASE_URL %>static/css/poplogin-less.css"/>
+    <link rel="stylesheet" href="<%= BASE_URL %>static/css/vue-layer.css"/>
+    <link rel="stylesheet" href="<%= BASE_URL %>static/css/common.css"/>
+    <link rel="stylesheet" href="//at.alicdn.com/t/font_2607939_lo5kqrispp9.css"/>
+    <% for (var i in htmlWebpackPlugin.options.cdn&&htmlWebpackPlugin.options.cdn.css) { %>
+    <link href="<%= BASE_URL %><%= htmlWebpackPlugin.options.cdn.css[i] %>" rel="preload" as="style" />
+    <link href="<%= BASE_URL %><%= htmlWebpackPlugin.options.cdn.css[i] %>" rel="stylesheet" />
+    <% } %>
+    <% for (var i in htmlWebpackPlugin.options.cdn && htmlWebpackPlugin.options.cdn.js) { %>
+    <script src="<%= BASE_URL %><%= htmlWebpackPlugin.options.cdn.js[i] %>" rel="preload" ></script>
+    <% } %>
+    <!-- 百家云播放器引入 -->
+    <link href="//live-cdn.baijiayun.com/www-video-jssdk/dep/videojs/0.0.6/dist/videojs.css" rel="stylesheet">
+    <script src="//libs.baidu.com/jquery/1.9.0/jquery.min.js"></script>
+    <script src="//live-cdn.baijiayun.com/www-video-jssdk/dep/videojs/0.0.6/dist/videojs.js"></script>
+    <script src="//live-cdn.baijiayun.com/www-video-jssdk/0.0.7/bjcPlayer/index.js"></script>
+
+  </head>
+  <body>
+    <div id="app"></div>
+  </body>
+</html>

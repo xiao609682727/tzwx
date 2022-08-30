@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.springcrazy.modules.exam.mapper.ExampaperMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="exampaperResultMap" type="org.springcrazy.modules.exam.entity.Exampaper">
+        <id column="id" property="id"/>
+        <result column="subjectId" property="subjectId"/>
+        <result column="name" property="name"/>
+        <result column="info" property="info"/>
+        <result column="replyTime" property="replyTime"/>
+        <result column="addTime" property="addTime"/>
+        <result column="status" property="status"/>
+        <result column="level" property="level"/>
+        <result column="joinNum" property="joinNum"/>
+        <result column="avgScore" property="avgScore"/>
+        <result column="type" property="type"/>
+        <result column="qstCount" property="qstCount"/>
+        <result column="updateTime" property="updateTime"/>
+        <result column="score" property="score"/>
+        <result column="passRate" property="passRate"/>
+        <result column="assemblyMode" property="assemblyMode"/>
+        <result column="questionsType" property="questionsType"/>
+        <result column="passNum" property="passNum"/>
+        <result column="actualJoinNum" property="actualJoinNum"/>
+        <result column="sortNum" property="sortNum"/>
+    </resultMap>
+
+
+    <select id="selectExampaperPage" resultMap="exampaperResultMap">
+        select * from exam_exampaper where is_deleted = 0
+    </select>
+
+
+
+</mapper>

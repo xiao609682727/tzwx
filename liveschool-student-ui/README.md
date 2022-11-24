@@ -22,3 +22,5 @@ npm run build
 
 #### 核心技术
 - 前端技术栈 `vue`、`vuex`、`vue-router`、`vue-cli`、`axios`
+2022-10-28 南辰夕
+解决更换网址用户端登录cookie值覆盖管理端cookie值的问题。

@@ -790,8 +790,16 @@
           });
         }
         if (["add", "view"].includes(type)) {
-          this.form={};
-          this.changeQues(1)
+          for(let key in this.form){
+            if(key=='qstType'){
+              this.form[key]=1;
+            }else if (key=='level'){
+              this.form[key]=1;
+            }else {
+              this.form[key]=undefined;
+            }
+          }
+          this.changeQues(1);
         };
         done();
       },

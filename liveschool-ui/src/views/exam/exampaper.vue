@@ -382,10 +382,11 @@
     },
     methods: {
       saveExamQuestion(){
-        saveQuestion(this.exampaperArr).then((res) => {
+        saveQuestion(this.exampaperArr,this.exam.id).then((res) => {
           // this.exampaperArr = []
           // this.dialogComposeVisible = false
           // this.onLoad(this.page);
+          this.openExam(this.exam);
         });
       },
       openExamAnalysis(exam){

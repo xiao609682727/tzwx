@@ -149,8 +149,8 @@ public class ExampaperController extends CrazyController {
 	@PostMapping("/saveQuestion")
 	@ApiOperationSupport(order = 6)
 	@ApiOperation(value = "保存试题", notes = "保存试题")
-	public R saveQuestion(@Valid @RequestBody List<PaperMiddle> exampaperList) {
-		exampaperService.insertQuestion(exampaperList);
+	public R saveQuestion(@Valid @RequestBody List<PaperMiddle> exampaperList,String id) {
+		exampaperService.insertQuestion(exampaperList,id);
 		return R.status(true);
 	}
 

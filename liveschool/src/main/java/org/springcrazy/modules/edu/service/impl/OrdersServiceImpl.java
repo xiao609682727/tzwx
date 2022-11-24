@@ -314,8 +314,12 @@ public class OrdersServiceImpl extends ServiceImpl<OrdersMapper, Orders> impleme
 			ordersVO.setEndTime(Orders.get("endTime").equals("") ? null : (Date) Orders.get("endTime"));
 			ordersVO.setPayType((String) Orders.get("payType"));
 			ordersVO.setOrderType((String) Orders.get("orderType"));
-			ordersVO.setCourseId(Integer.valueOf(Orders.get("courseId")+""));
-			ordersVO.setUserId(Integer.valueOf(Orders.get("userId")+""));
+			if (Func.isNotEmpty(Orders.get("courseId"))) {
+				ordersVO.setCourseId(Integer.valueOf(Orders.get("courseId") + ""));
+			}
+			if (Func.isNotEmpty(Orders.get("userId"))) {
+				ordersVO.setUserId(Integer.valueOf(Orders.get("userId") + ""));
+			}
 
 			List<ExportOrdersExcel> list = baseMapper.exportOrders(null, ordersVO);
 

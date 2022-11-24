@@ -361,6 +361,9 @@
         if(row.videoType == "2"){
           vtype = "baijiayunvod"
         }
+        if(row.videoType == "3"){
+          vtype = "othervod"
+        }
         this.form.videoType = vtype;
 
         let value=row.videoDuration;

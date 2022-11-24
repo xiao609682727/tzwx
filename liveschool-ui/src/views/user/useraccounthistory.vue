@@ -324,7 +324,7 @@
           type: "warning"
         }).then(() => {
           window.open(`/api/user/useraccounthistory/export-userAccountHistory?crazy-auth=${getToken()}`+
-          `&userName=`+ this.search.userName+`&mobile=`+this.search.mobile+
+          `&userId=`+ this.query.userId+`&userName=`+ this.search.userName+`&mobile=`+this.search.mobile+
           `&email=`+this.search.email+`&actHistoryType=`+this.search.actHistoryType+
            `&bizType=`+this.search.bizType+`&createTime=`+this.search.createTime);
 

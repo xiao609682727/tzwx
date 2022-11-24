@@ -16,7 +16,6 @@ export default {
   statusWhiteList: [],
   //配置首页不可关闭
   isFirstPage: false,
-  aliyunAccount: "1367689850580798",
   fistPage: {
     label: "首页",
     value: "/wel/index",

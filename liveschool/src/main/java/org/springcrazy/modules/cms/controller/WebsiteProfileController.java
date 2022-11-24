@@ -335,4 +335,14 @@ public class WebsiteProfileController extends CrazyController {
 		return R.data(result);
 	}
 
+	/**
+	 * 获取阿里云的userId
+	 */
+	@GetMapping("/getAliyunAccount")
+	@ApiOperation(value = "上传app的包", notes = "上传app的包")
+	public R getAliyunAccount(){
+		Map<String,String> map = ProfileConfig.getConfig(WebsiteProfile.ALIYUN_LIVE);
+		return R.data(map.get("aliyunAccount"));
+	}
+
 }

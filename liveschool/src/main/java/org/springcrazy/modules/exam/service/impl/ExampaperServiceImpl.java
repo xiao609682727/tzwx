@@ -45,8 +45,8 @@ public class ExampaperServiceImpl extends ServiceImpl<ExampaperMapper, Exampaper
 	}
 
 	@Override
-	public void insertQuestion(List<PaperMiddle> examQuestionDTOList) {
-		Integer paperId = examQuestionDTOList.get(0).getPaperId();
+	public void insertQuestion(List<PaperMiddle> examQuestionDTOList,String id) {
+		Integer	 paperId = Integer.valueOf(id);
 
 		Integer qstCount = 0;
 		BigDecimal score = new BigDecimal(0);
@@ -58,6 +58,10 @@ public class ExampaperServiceImpl extends ServiceImpl<ExampaperMapper, Exampaper
 		List<Qstmiddle> qstmiddleList = Lists.newArrayList();
 		//循环大题 判断出要修改的与要添加的
 		if(examQuestionDTOList.size() > 0){
+			//重新修改题目数量
+			for(PaperMiddle examQuestionDT:examQuestionDTOList){
+				examQuestionDT.setNum(examQuestionDT.getQuestionArr().size());
+			}
 			paperMiddleService.saveOrUpdateBatch(examQuestionDTOList);
 		}
 		for (int i = 0; i < examQuestionDTOList.size(); i++) {

@@ -31,7 +31,7 @@
         <el-button type="text" @click="openOrderDetail(scope.row)" >订单详情</el-button>
         <el-button type="text" v-if="scope.row.states == '1'" @click="updateOrder(scope.row,'3')">取消</el-button>
         <el-button type="text" v-if="scope.row.states == '1'" @click="updateOrder(scope.row,'2')" >开通</el-button>
-<!--        <el-button type="text" v-if="scope.row.states == '2'" >退款</el-button>-->
+        <!--        <el-button type="text" v-if="scope.row.states == '2'" >退款</el-button>-->
         <el-button type="text" v-if="scope.row.states == '3'" @click="updateOrder(scope.row,'2')" >恢复</el-button>
       </template>
     </avue-crud>
@@ -55,7 +55,10 @@
         orderType:"",
         dialogOrderVisible:false,
         form: {},
-        query: {userId:this.userId,courseId:this.courseId},
+        query: {
+          userId: this.userId,
+          courseId: this.courseId
+        },
         loading: true,
         page: {
           pageSize: 10,
@@ -79,11 +82,11 @@
               prop: "orderNo",
               search:true,
             },
-/*            {
-              label: "账号",
-              prop: "loginAccount",
-              search:true
-            },*/
+            /*            {
+                          label: "账号",
+                          prop: "loginAccount",
+                          search:true
+                        },*/
             {
               label: "手机",
               prop: "mobile",
@@ -214,26 +217,26 @@
                precision: 2,
                hide: true,
              },*/
-          /*  {
-              label: "优惠券金额",
-              prop: "couponAmount",
-              hide:true,
-              type: "number",
-              precision: 2,
-            },*/
-           /* {
-              label: "砍价金额",
-              hide:true,
-              prop: "bargainAmount",
-              type: "number",
-              precision: 2,
-            },*/
-           /* {
-              label: "退款金额",
-              prop: "refundAmount",
-              type: "number",
-              precision: 2,
-            },*/
+            /*  {
+                label: "优惠券金额",
+                prop: "couponAmount",
+                hide:true,
+                type: "number",
+                precision: 2,
+              },*/
+            /* {
+               label: "砍价金额",
+               hide:true,
+               prop: "bargainAmount",
+               type: "number",
+               precision: 2,
+             },*/
+            /* {
+               label: "退款金额",
+               prop: "refundAmount",
+               type: "number",
+               precision: 2,
+             },*/
             {
               label: "订单类型",
               prop: "orderType",
@@ -270,19 +273,19 @@
     watch: {
       userId: {
         deep: true,
-            handler(newVal){
+        handler(newVal){
           this.query.userId = newVal;
           this.onLoad(this.page);
         }
       },
-    courseId: {
-      deep: true,
-          handler(newVal){
-        this.query.courseId = newVal;
-        this.onLoad(this.page);
+      courseId: {
+        deep: true,
+        handler(newVal){
+          this.query.courseId = newVal;
+          this.onLoad(this.page);
+        }
       }
-    }
-  },
+    },
     computed: {
       ...mapGetters(["permission"]),
       permissionList() {
@@ -319,10 +322,17 @@
           type: "warning"
         }).then(() => {
           window.open(`/api/edu/orders/export-order?crazy-auth=${getToken()}`+
-          `&orderNo=`+this.search.orderNo+`&mobile=`+this.search.mobile+`&email=`+this.search.email+
-          `&userName=`+this.search.userName+`&states=`+this.search.states+`&createTime=`+this.search.createTime+
-          `&endTime=`+this.search.endTime+`&payType=`+this.search.payType+`&orderType=`+this.search.orderType
-              +`&userId=`+this.userId+`&courseId=`+this.courseId);
+          `&orderNo=`+(this.search.orderNo == undefined? "" : this.search.orderNo)+
+          `&mobile=`+(this.search.mobile == undefined? "" : this.search.mobile)+
+          `&email=`+(this.search.email == undefined? "" : this.search.email)+
+          `&userName=`+(this.search.userName == undefined? "" : this.search.userName)+
+          `&states=`+(this.search.states == undefined? "" : this.search.states)+
+          `&createTime=`+(this.search.createTime == undefined? "" : this.search.createTime)+
+          `&endTime=`+(this.search.endTime == undefined? "" : this.search.endTime)+
+          `&payType=`+(this.search.payType == undefined? "" : this.search.payType)+
+          `&orderType=`+(this.search.orderType == undefined? "" : this.search.orderType)+
+          `&userId=`+(this.userId == undefined? "" : this.userId)+
+          `&courseId=`+(this.courseId == undefined? "" : this.courseId));
         });
       },
       rowSave(row, loading, done) {
@@ -418,12 +428,12 @@
       },
       searchReset() {
         this.query = {};
-          this.page.currentPage = 1;
+        this.page.currentPage = 1;
         this.onLoad(this.page);
       },
       searchChange(params,done) {
         this.query = params;
-          this.page.currentPage = 1;
+        this.page.currentPage = 1;
         this.onLoad(this.page, params);
         done()
       },
@@ -440,9 +450,9 @@
       sizeChange(pageSize){
         this.page.pageSize = pageSize;
       },
-        refreshChange() {
-            this.onLoad(this.page, this.query);
-        },
+      refreshChange() {
+        this.onLoad(this.page, this.query);
+      },
       onLoad(page, params = {}) {
         this.loading = true;
         getList(page.currentPage, page.pageSize, Object.assign(params, this.query)).then(res => {

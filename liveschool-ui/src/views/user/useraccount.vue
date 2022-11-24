@@ -30,7 +30,7 @@
     <el-dialog :title="formTitleText" :visible.sync="dialogFormVisible">
       <el-form >
         <el-form-item :label="formLabelText" label-width="120px">
-          <el-input-number v-model="money" :precision="2" autocomplete="off"></el-input-number>
+          <el-input-number :min="0" v-model="money" :precision="2" autocomplete="off"></el-input-number>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">

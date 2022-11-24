@@ -152,13 +152,13 @@
                 value:"1",
                 tip: item.tip,
                 change:function(value){
-                  var forceLoginFlag =this.findObject(that.option.column,'forceLoginFlag')
-                  console.log(forceLoginFlag)
+                  var wechatmpOpenFlag =this.findObject(that.option.column,'wechatmpOpenFlag')
+                  console.log(wechatmpOpenFlag)
                   if(value.column.prop == 'wechatmpOpenFlag'){
                     if(value.value == '1'){
-                      forceLoginFlag.disabled = false
+                      wechatmpOpenFlag.disabled = false
                     }else{
-                      forceLoginFlag.disabled = true
+                      wechatmpOpenFlag.disabled = true
                     }
                   }
                 },

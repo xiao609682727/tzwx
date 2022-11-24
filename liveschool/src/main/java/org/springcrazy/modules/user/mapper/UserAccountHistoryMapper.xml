@@ -65,6 +65,9 @@
         select * from edu_user_account_history
         left join edu_student on edu_user_account_history.user_id = edu_student.id
         <where>
+            <if test="ew.userId !=null and ew.userId > 0 ">
+                and edu_student.id = #{ew.userId}
+            </if>
             <if test="ew.userName !=null and ew.userName !='' ">
                 and edu_student.user_name like concat('%',#{ew.userName},'%')
             </if>

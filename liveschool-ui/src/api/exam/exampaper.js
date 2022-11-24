@@ -58,9 +58,9 @@ export const subjectTree = () => {
 }
 
 
-export const saveQuestion = (row) => {
+export const saveQuestion = (row,id) => {
   return request({
-    url: '/api/exam/exampaper/saveQuestion',
+    url: '/api/exam/exampaper/saveQuestion?id='+id,
     method: 'post',
     data: row
   })

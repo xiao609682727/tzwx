@@ -1,22 +1,21 @@
 server:
+  #服务端口
   port: 81
-
 #数据源配置
 spring:
   redis:
-    ##redis 单机环境配置
-    host: 182.92.233.160
-    port: 15002
-    password: rgPt1hBdqPtYJ0acpnfdmWbSHt09kH5T1
+    #redis的ip
+    host: 127.0.0.1
+    #redis的端口
+    port: 6379
+    #redis的密码
+    password: rgPt1hBdqPtYJ0acpnfdmWbSHt09kH5T
     database: 0
     ssl: false
   datasource:
     url: jdbc:mysql://127.0.0.1:3306/school?useSSL=false&useUnicode=true&characterEncoding=utf-8&zeroDateTimeBehavior=convertToNull&transformedBitIsBoolean=true&serverTimezone=GMT%2B8
     username: root
     password: root
-#    url: jdbc:mysql://localhost:3306/school?useSSL=false&useUnicode=true&characterEncoding=utf-8&zeroDateTimeBehavior=convertToNull&transformedBitIsBoolean=true&serverTimezone=GMT%2B8
-#    username: root
-#    password: root
     driver-class-name: com.mysql.cj.jdbc.Driver
     # druid相关配置
     druid:
@@ -45,16 +44,16 @@ spring:
 #crazy配置
 crazy:
   prop:
-    #上传文件访问域名，用于文件上传外网访问地址的拼接
+    #上传文件访问域名，用于文件上传外网访问地址的拼接，文件上传后自动拼接此前缀
     upload-domain: http://localhost:1888
     #开启远程上传路径
     remote-mode: true
-    # 设置远程上传路径
+    # 设置文件上传路径，上传的静态资源都上传到了此路径下
     remote-path: D:\work\gitwork\产品\同舟网校\liveschool\src\main\resources
-    # 站点域名
-    domain: http://182.92.233.160:15009
+    # 系统的站点域名，用于系统中，支付宝，微信调用时的回调地址，后面要带上api结尾
+    domain: https://wx.tongzhoushidai.com/api
     #前台站点域名(用于学员端支付，第三方登录时返回访问地址，拼接地址前缀时使用，必须配置)
-    front-domain: http://182.92.233.160:15009
+    front-domain: https://wx.tongzhoushidai.com
     # 上传文件类型限制
     upload-file-type: jpg,png,jpeg,JPG,PNG,JPEG,docx,doc,xls,xlsx,ico
     # vue前台 icon上传路径

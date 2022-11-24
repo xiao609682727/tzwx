@@ -4,6 +4,7 @@ package org.springcrazy.modules.edu.controller;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.github.xiaoymin.knife4j.annotations.ApiOperationSupport;
+import io.minio.messages.S3Key;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -112,7 +113,7 @@ public class CourseStudyhistoryController extends CrazyController {
 	@ApiOperation(value = "修改", notes = "传入courseStudyhistory")
 	public R update(CourseStudyhistory courseStudyhistory) {
 		//检测同一个用户同一章节的学习记录时长请求，如果50秒内请求超过3次，则为非正常请求。不接收。
-		String studyTimeRedis="STUDYTIMEREDIS_"+courseStudyhistory.getUserId()+"_"+courseStudyhistory.getKpointId();
+		String studyTimeRedis="STUDYTIMEREDIS_"+ SecureUtil.getUserId() +"_"+courseStudyhistory.getKpointId();
 		Object studyTimeRedisNums = redisUtil.get(studyTimeRedis);
 		int StudyGetNums=0;
 		// 判断redis存储的是否有值

@@ -377,7 +377,7 @@ public class StudentServiceImpl extends ServiceImpl<StudentMapper, Student> impl
 		//检测是否为纯数字
 		Pattern pattern = Pattern.compile("^[-\\+]?[\\d]*$");
 		//检测手机号
-		String pMobile = "^((13[0-9])|(14[5|7])|(15([0-3]|[5-9]))|(17[013678])|(18[0,5-9]))\\\\d{8}$";
+		String pMobile = "^(13[0-9]|14[01456879]|15[0-35-9]|16[2567]|17[0-8]|18[0-9]|19[0-35-9])\\d{8}$";
 		//检测邮箱
 		Pattern patternEmail = Pattern.compile("[\\w!#$%&'*+/=?^_`{|}~-]+(?:\\.[\\w!#$%&'*+/=?^_`{|}~-]+)*@(?:[\\w](?:[\\w-]*[\\w])?\\.)+[\\w](?:[\\w-]*[\\w])?");
 		//检测字符串中是否包含特殊符号
@@ -422,7 +422,8 @@ public class StudentServiceImpl extends ServiceImpl<StudentMapper, Student> impl
 					temp = baseMapper.checkStudentMobile(student);
 					if(Func.isNotEmpty(temp)){
 						errMsg += "第" + i + "行，电话重复;<br />";
-					}else if (Func.isNotEmpty(studentExcel.getMobile()) && !pattern.matcher(studentExcel.getMobile()).matches() && studentExcel.getMobile().matches(pMobile)){
+					}else if (Func.isNotEmpty(studentExcel.getMobile())
+							&& !pattern.matcher(studentExcel.getMobile()).matches() && studentExcel.getMobile().matches(pMobile)){
 						errMsg += "第" + i + "行，手机号不正确;<br />";
 					}else {
 						studentList.get(i-1).setMobile(studentExcel.getMobile());

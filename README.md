@@ -64,10 +64,10 @@ redis: 5.0.7及以上版本
 Web版码云代码地址：[https://gitee.com/xiaokun/tongzhouschool](https://gitee.com/xiaokun/tongzhouschool)
 
 ### 安装及使用说明
-#### 前端使用说明：https://www.kancloud.cn/tongzhou/tongzhouwangxiaov20200915/1936656
-#### 后端使用说明：https://www.kancloud.cn/tongzhou/tongzhouwangxiaov20200915/1936669
-#### 系统配置说明（QQ,微信，支付等第三方配置）：https://www.kancloud.cn/tongzhou/tongzhouwangxiaov20200915/1936681
-#### 程序启动使用说明：https://www.kancloud.cn/tongzhou/tongzhouwangxiaov20200915/2723987
+#### [前端使用说明](http://zy.tongzhoushidai.com/xkdoc/wx/%E5%89%8D%E5%8F%B0%E4%BD%BF%E7%94%A8%E6%96%87%E6%A1%A3/%E5%89%8D%E5%8F%B0%E9%A6%96%E9%A1%B5.html)
+#### [后端使用说明](http://zy.tongzhoushidai.com/xkdoc/wx/%E5%90%8E%E5%8F%B0%E4%BD%BF%E7%94%A8%E6%96%87%E6%A1%A3/%E5%90%8E%E5%8F%B0%E9%A6%96%E9%A1%B5.html)
+#### [程序启动使用说明](http://zy.tongzhoushidai.com/xkdoc/wx/%E7%B3%BB%E7%BB%9F%E5%90%AF%E5%8A%A8/%E5%90%8E%E5%8F%B0%E6%8E%A5%E5%8F%A3%E7%B3%BB%E7%BB%9F%E5%90%AF%E5%8A%A8%E8%AF%B4%E6%98%8E.html)
+#### [配置文档](http://zy.tongzhoushidai.com/xkdoc/wx/%E7%B3%BB%E7%BB%9F%E9%85%8D%E7%BD%AE%E6%96%87%E6%A1%A3/%E7%94%B3%E8%AF%B7%E6%96%87%E6%A1%A3%E4%BD%BF%E7%94%A8%E8%AF%B4%E6%98%8E.html)
 #### 关注公众号获取项目sql文件
 ![输入图片说明](https://wx.tongzhoushidai.com/upload/kaiyuan/qrcode_for_gh_2ae378e3333c_258.jpg)
 
@@ -77,19 +77,14 @@ Web版码云代码地址：[https://gitee.com/xiaokun/tongzhouschool](https://gi
 
 #### 微信
 ##### 如有什么问题和软件建议，可以添加微信沟通。
-![输入图片说明](https://wx.tongzhoushidai.com/upload/kaiyuan/qiyeweixin.png)
-
-### 其他案例
-
-#### 快乐摇色子游戏
-![输入图片说明](https://wx.tongzhoushidai.com/upload/kaiyuan/gh_07ee17e7dd6a_258.jpg)
-#### 欢乐喝酒神器游戏
-![输入图片说明](https://wx.tongzhoushidai.com/upload/kaiyuan/gh_3f19a0abe151_258.jpg)
+![微信客服](https://wx.tongzhoushidai.com/upload/kaiyuan/qiyeweixin.png)
 
 
 
 
 
-【使用声明】 尊敬的用户您好，欢迎使用同舟网校开源版本程序。 
+【使用声明】 尊敬的用户您好，欢迎使用网校开源版本程序。 
 用户可直接用于个人学习研究或非盈利公益使用，但禁止用于商业用途，请尊重开源工作者的奉献，未经官方同意授权，禁止商用或获利，禁止将本项目的代码和资源进行任何形式的出售，产生的一切任何后果责任由侵权者自负。
 
+### 更新记录
+2022-06-28 修复后台->系统配置->站点消息管理，一点编辑，后台就卡死了的问题

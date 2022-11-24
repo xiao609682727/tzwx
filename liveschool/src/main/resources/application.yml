@@ -1,7 +1,5 @@
 #服务器配置
 server:
-  # 服务端口
-  port: 81
   undertow:
     # 设置IO线程数, 它主要执行非阻塞的任务,它们会负责多个连接, 默认设置每个CPU核心一个线程
     io-threads: 16
@@ -24,8 +22,8 @@ spring:
       config: classpath:config/ehcache.xml
   servlet:
     multipart:
-      max-file-size: 256MB
-      max-request-size: 1024MB
+      max-file-size: 3048MB
+      max-request-size: 3048MB
   mvc:
     throw-exception-if-no-handler-found: true
   resources:

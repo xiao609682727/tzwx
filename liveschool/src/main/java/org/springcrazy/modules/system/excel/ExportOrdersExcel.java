@@ -175,7 +175,11 @@ public class ExportOrdersExcel implements Serializable {
 	}
 
 	public void setUserName(String userName) {
-		this.userName = userName;
+		if (Func.equals(userName , "undefined")){
+			this.userName = "";
+		}else {
+			this.userName = userName;
+		}
 	}
 
 	public String getMobile() {

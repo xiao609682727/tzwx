@@ -28,7 +28,7 @@ public interface IExampaperService extends IService<Exampaper> {
 	 */
 	IPage<ExampaperVO> selectExampaperPage(IPage<ExampaperVO> page, ExampaperVO exampaper);
 
-	void insertQuestion(List<PaperMiddle> examQuestionDTOList);
+	void insertQuestion(List<PaperMiddle> examQuestionDTOList,String id);
 
 	List<PaperMiddle> queryQuestion(String paperId);
 

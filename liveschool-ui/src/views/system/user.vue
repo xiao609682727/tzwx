@@ -81,7 +81,7 @@
                     </el-button>
           </template>
         </avue-crud>
-        </el-card>>
+        </el-card>
       </el-col>
     </el-row>
     <el-dialog title="用户角色配置"

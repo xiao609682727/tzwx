@@ -59,8 +59,6 @@ redis: 5.0.7及以上版本
 
 ![网校h5演示站](https://wx.tongzhoushidai.com/upload/kaiyuan/wxh5.png)
 
-官方网站地址：[http://gw.tongzhoushidai.com](http://gw.tongzhoushidai.com)
-
 Web版码云代码地址：[https://gitee.com/xiaokun/tongzhouschool](https://gitee.com/xiaokun/tongzhouschool)
 
 ### 安装及使用说明
